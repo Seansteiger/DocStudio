@@ -163,7 +163,7 @@ export function renderResumePage(container) {
   const highSchoolItemRender = (n) => `
     <div class="repeater-item">
       <div class="repeater-item-header"><span class="repeater-item-number">highschool ${n}</span><button class="repeater-remove">×</button></div>
-      ${formRow(formGroup('School Name', 'hsName', 'text', 'High School Name'), formGroup('Year', 'hsYear', 'text', '2015'))}
+      ${formRow(formGroup('School Name', 'hsName', 'text', 'High School Name'), formGroup('Matric Year', 'hsYear', 'text', '2015'))}
       ${formGroup('Subjects & Results', 'hsSubjects', 'textarea', 'Maths (80%), Physics (75%), English (B)...')}
     </div>`;
 

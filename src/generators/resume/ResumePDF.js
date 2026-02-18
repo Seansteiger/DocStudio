@@ -145,7 +145,9 @@ function generateClassicResume(doc, data, pal, templateId) {
             doc.text(hs.hsYear || '', PAGE.w - m, y, { align: 'right' });
             y += 5;
             setColor(doc, pal.accent);
-            doc.text(hs.hsSubjects || '', m, y);
+            if (hs.hsSubjects) {
+                y = addWrappedText(doc, hs.hsSubjects, m, y, w, 4.2);
+            }
             y += 7;
         });
     }
@@ -440,7 +442,9 @@ function generateSidebarResume(doc, data, pal, templateId) {
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(9);
             setColor(doc, pal.muted);
-            doc.text(hs.hsSubjects || '', mainX, y);
+            if (hs.hsSubjects) {
+                y = addWrappedText(doc, hs.hsSubjects, mainX, y, mainW, 4.2);
+            }
             y += 7;
         });
     }
