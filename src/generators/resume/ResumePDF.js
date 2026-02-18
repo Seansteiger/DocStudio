@@ -358,11 +358,16 @@ function generateSidebarResume(doc, data, pal, templateId) {
             doc.setFontSize(10.5);
             setColor(doc, pal.text);
             doc.text(exp.expTitle || '', mainX, y);
+
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(9);
+            setColor(doc, pal.muted);
+            doc.text(`${exp.expStart || ''} — ${exp.expEnd || ''}`, PAGE.w - PAGE.margin, y, { align: 'right' });
+
             y += 5;
             doc.setFont('helvetica', 'italic');
-            doc.setFontSize(9);
             setColor(doc, pal.accent);
-            doc.text(`${exp.expCompany || ''} | ${exp.expStart || ''} — ${exp.expEnd || ''}`, mainX, y);
+            doc.text(exp.expCompany || '', mainX, y);
             y += 5;
             if (exp.expDesc) {
                 doc.setFont('helvetica', 'normal');
@@ -392,11 +397,17 @@ function generateSidebarResume(doc, data, pal, templateId) {
             doc.setFontSize(10);
             setColor(doc, pal.text);
             doc.text(edu.eduDegree || '', mainX, y);
+
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(9);
+            setColor(doc, pal.muted);
+            doc.text(edu.eduYear || '', PAGE.w - PAGE.margin, y, { align: 'right' });
+
             y += 4.5;
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(9);
             setColor(doc, pal.muted);
-            doc.text(`${edu.eduSchool || ''} | ${edu.eduYear || ''}${edu.eduGrade ? ` | ${edu.eduGrade}` : ''}`, mainX, y);
+            doc.text(`${edu.eduSchool || ''}${edu.eduGrade ? ` | ${edu.eduGrade}` : ''}`, mainX, y);
             y += 7;
         });
     }
@@ -419,11 +430,17 @@ function generateSidebarResume(doc, data, pal, templateId) {
             doc.setFontSize(10);
             setColor(doc, pal.text);
             doc.text(hs.hsName || '', mainX, y);
+
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(9);
+            setColor(doc, pal.muted);
+            doc.text(hs.hsYear || '', PAGE.w - PAGE.margin, y, { align: 'right' });
+
             y += 4.5;
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(9);
             setColor(doc, pal.muted);
-            doc.text(`${hs.hsSubjects || ''} | ${hs.hsYear || ''}`, mainX, y);
+            doc.text(hs.hsSubjects || '', mainX, y);
             y += 7;
         });
     }
