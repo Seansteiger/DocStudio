@@ -71,6 +71,31 @@ export function renderResumePage(container) {
             <button class="repeater-add">${ICONS.plus} Add Education</button>
           </div>
 
+          <div class="section-header" style="margin-top:1.5rem;"><div class="section-title">High School Education</div></div>
+          <div data-repeater="highschool">
+            <div class="repeater-item">
+              <div class="repeater-item-header">
+                <span class="repeater-item-number">School 1</span>
+                <button class="repeater-remove">×</button>
+              </div>
+              ${formRow(formGroup('School Name', 'hsName', 'text', 'High School Name'), formGroup('Year', 'hsYear', 'text', '2015'))}
+              ${formGroup('Subjects & Results', 'hsSubjects', 'textarea', 'Maths (80%), Physics (75%), English (B)...')}
+            </div>
+            <button class="repeater-add">${ICONS.plus} Add High School</button>
+          </div>
+
+          <div class="section-header" style="margin-top:1.5rem;"><div class="section-title">Languages</div></div>
+          <div data-repeater="languages">
+            <div class="repeater-item">
+              <div class="repeater-item-header">
+                <span class="repeater-item-number">Language 1</span>
+                <button class="repeater-remove">×</button>
+              </div>
+              ${formRow(formGroup('Language', 'langName', 'text', 'English'), formGroup('Proficiency', 'langLevel', 'text', 'Native/Fluent'))}
+            </div>
+            <button class="repeater-add">${ICONS.plus} Add Language</button>
+          </div>
+
           <div class="section-header" style="margin-top:1.5rem;"><div class="section-title">Skills</div></div>
           ${formGroup('Skills', 'skills', 'textarea', 'JavaScript, Python, React, Node.js, SQL, Git (comma-separated)')}
 
@@ -135,6 +160,19 @@ export function renderResumePage(container) {
       ${formRow(formGroup('Year', 'eduYear', 'text', '2020'), formGroup('Grade', 'eduGrade', 'text', ''))}
     </div>`;
 
+  const highSchoolItemRender = (n) => `
+    <div class="repeater-item">
+      <div class="repeater-item-header"><span class="repeater-item-number">highschool ${n}</span><button class="repeater-remove">×</button></div>
+      ${formRow(formGroup('School Name', 'hsName', 'text', 'High School Name'), formGroup('Year', 'hsYear', 'text', '2015'))}
+      ${formGroup('Subjects & Results', 'hsSubjects', 'textarea', 'Maths (80%), Physics (75%), English (B)...')}
+    </div>`;
+
+  const languageItemRender = (n) => `
+    <div class="repeater-item">
+      <div class="repeater-item-header"><span class="repeater-item-number">languages ${n}</span><button class="repeater-remove">×</button></div>
+      ${formRow(formGroup('Language', 'langName', 'text', 'English'), formGroup('Proficiency', 'langLevel', 'text', 'Native/Fluent'))}
+    </div>`;
+
   const referenceItemRender = (n) => `
     <div class="repeater-item">
       <div class="repeater-item-header"><span class="repeater-item-number">Reference ${n}</span><button class="repeater-remove">×</button></div>
@@ -144,6 +182,8 @@ export function renderResumePage(container) {
 
   initRepeater(form, 'experience', experienceItemRender);
   initRepeater(form, 'education', educationItemRender);
+  initRepeater(form, 'highschool', highSchoolItemRender);
+  initRepeater(form, 'languages', languageItemRender);
   initRepeater(form, 'references', referenceItemRender);
 
   // Preview update
@@ -159,6 +199,8 @@ export function renderResumePage(container) {
 
     const experience = collectRepeaterData(form, 'experience');
     const education = collectRepeaterData(form, 'education');
+    const highschool = collectRepeaterData(form, 'highschool');
+    const languages = collectRepeaterData(form, 'languages');
     const references = collectRepeaterData(form, 'references');
     const skills = (data.skills || '').split(',').map(s => s.trim()).filter(Boolean);
 
@@ -179,12 +221,16 @@ export function renderResumePage(container) {
                 <p style="font-size:9px;opacity:0.7;margin-bottom:3px;">📱 ${data.phone || ''}</p>
                 <p style="font-size:9px;opacity:0.7;margin-bottom:3px;">📍 ${data.location || ''}</p>
                 ${data.website ? `<p style="font-size:9px;opacity:0.7;">🔗 ${data.website}</p>` : ''}
+                
                 ${skills.length > 0 ? `<div style="margin-top:14px;border-top:1px solid rgba(255,255,255,0.2);padding-top:10px;"><p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Skills</p>${skills.map(s => `<div style="background:rgba(255,255,255,0.15);padding:3px 8px;border-radius:8px;font-size:9px;margin-bottom:3px;display:inline-block;margin-right:3px;">${s}</div>`).join('')}</div>` : ''}
+
+                ${languages.length > 0 ? `<div style="margin-top:14px;border-top:1px solid rgba(255,255,255,0.2);padding-top:10px;"><p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Languages</p>${languages.map(l => `<div style="margin-bottom:4px;"><span style="font-size:9px;font-weight:600;">${l.langName}</span> <span style="font-size:8px;opacity:0.8;">- ${l.langLevel}</span></div>`).join('')}</div>` : ''}
               </div>
               <div style="flex:1;padding:16px;">
                 ${data.summary ? `<div style="margin-bottom:14px;">${sectionHeading('Summary')}<p style="font-size:10px;color:#444;line-height:1.6;">${data.summary}</p></div>` : ''}
                 ${experience.length > 0 ? `<div style="margin-bottom:14px;">${sectionHeading('Experience')}${experience.map(e => `<div style="margin-bottom:8px;"><div style="display:flex;justify-content:space-between;"><strong style="font-size:11px;">${e.expTitle || ''}</strong><span style="font-size:9px;color:#888;">${e.expStart || ''} — ${e.expEnd || ''}</span></div><div style="font-size:10px;color:${t.accent};">${e.expCompany || ''}</div><p style="font-size:9px;color:#555;margin-top:3px;">${e.expDesc || ''}</p></div>`).join('')}</div>` : ''}
                 ${education.length > 0 ? `<div style="margin-bottom:14px;">${sectionHeading('Education')}${education.map(e => `<div style="margin-bottom:6px;"><strong style="font-size:11px;">${e.eduDegree || ''}</strong><div style="font-size:10px;color:#666;">${e.eduSchool || ''} ${e.eduGrade ? `— ${e.eduGrade}` : ''}</div><div style="font-size:9px;color:#888;">${e.eduYear || ''}</div></div>`).join('')}</div>` : ''}
+                ${highschool.length > 0 ? `<div style="margin-bottom:14px;">${sectionHeading('High School')}${highschool.map(h => `<div style="margin-bottom:6px;"><strong style="font-size:11px;">${h.hsName || ''}</strong><div style="font-size:10px;color:#666;">${h.hsSubjects || ''}</div><div style="font-size:9px;color:#888;">${h.hsYear || ''}</div></div>`).join('')}</div>` : ''}
               </div>
             </div>`;
     } else if (isDark) {
@@ -198,7 +244,9 @@ export function renderResumePage(container) {
               ${data.summary ? `<div style="margin-bottom:14px;">${sectionHeading('Summary')}<p style="font-size:10px;color:#444;line-height:1.6;">${data.summary}</p></div>` : ''}
               ${experience.length > 0 ? `<div style="margin-bottom:14px;">${sectionHeading('Experience')}${experience.map(e => `<div style="margin-bottom:8px;"><div style="display:flex;justify-content:space-between;"><strong style="font-size:11px;">${e.expTitle || ''}</strong><span style="font-size:9px;color:#888;">${e.expStart || ''} — ${e.expEnd || ''}</span></div><div style="font-size:10px;color:${t.accent};">${e.expCompany || ''}</div><p style="font-size:9px;color:#555;margin-top:3px;">${e.expDesc || ''}</p></div>`).join('')}</div>` : ''}
               ${education.length > 0 ? `<div style="margin-bottom:14px;">${sectionHeading('Education')}${education.map(e => `<div style="margin-bottom:6px;"><strong style="font-size:11px;">${e.eduDegree || ''}</strong><div style="font-size:10px;color:#666;">${e.eduSchool || ''}</div></div>`).join('')}</div>` : ''}
+              ${highschool.length > 0 ? `<div style="margin-bottom:14px;">${sectionHeading('High School')}${highschool.map(h => `<div style="margin-bottom:6px;"><strong style="font-size:11px;">${h.hsName || ''}</strong><div style="font-size:10px;color:#666;">${h.hsSubjects || ''}</div><div style="font-size:9px;color:#888;">${h.hsYear || ''}</div></div>`).join('')}</div>` : ''}
               ${skills.length > 0 ? `<div style="margin-bottom:14px;">${sectionHeading('Skills')}<div style="display:flex;flex-wrap:wrap;gap:4px;">${skills.map(s => `<span style="background:${t.accentLight};color:${t.accent};padding:2px 8px;border-radius:10px;font-size:9px;font-weight:600;">${s}</span>`).join('')}</div></div>` : ''}
+              ${languages.length > 0 ? `<div style="margin-bottom:14px;">${sectionHeading('Languages')}<div style="display:flex;flex-wrap:wrap;gap:8px;">${languages.map(l => `<span style="font-size:9px;color:#444;"><strong>${l.langName}</strong> (${l.langLevel})</span>`).join('')}</div></div>` : ''}
             </div>`;
     } else {
       // Standard layout
@@ -209,7 +257,9 @@ export function renderResumePage(container) {
               ${data.summary ? `<div style="margin-bottom:16px;">${sectionHeading('Summary')}<p style="font-size:11px;color:#444;line-height:1.6;">${data.summary}</p></div>` : ''}
               ${experience.length > 0 ? `<div style="margin-bottom:16px;">${sectionHeading('Experience')}${experience.map(e => `<div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;"><strong style="font-size:12px;">${e.expTitle || ''}</strong><span style="font-size:10px;color:#888;">${e.expStart || ''} — ${e.expEnd || ''}</span></div><div style="font-size:11px;color:${t.accent};">${e.expCompany || ''}</div><p style="font-size:10px;color:#555;margin-top:4px;line-height:1.5;">${e.expDesc || ''}</p></div>`).join('')}</div>` : ''}
               ${education.length > 0 ? `<div style="margin-bottom:16px;">${sectionHeading('Education')}${education.map(e => `<div style="margin-bottom:8px;"><div style="display:flex;justify-content:space-between;"><strong style="font-size:12px;">${e.eduDegree || ''}</strong><span style="font-size:10px;color:#888;">${e.eduYear || ''}</span></div><div style="font-size:11px;color:#666;">${e.eduSchool || ''} ${e.eduGrade ? `— ${e.eduGrade}` : ''}</div></div>`).join('')}</div>` : ''}
+              ${highschool.length > 0 ? `<div style="margin-bottom:16px;">${sectionHeading('High School')}${highschool.map(h => `<div style="margin-bottom:8px;"><div style="display:flex;justify-content:space-between;"><strong style="font-size:12px;">${h.hsName || ''}</strong><span style="font-size:10px;color:#888;">${h.hsYear || ''}</span></div><div style="font-size:11px;color:#666;">${h.hsSubjects || ''}</div></div>`).join('')}</div>` : ''}
               ${skills.length > 0 ? `<div style="margin-bottom:16px;">${sectionHeading('Skills')}<div style="display:flex;flex-wrap:wrap;gap:4px;">${skills.map(s => `<span style="background:${t.accentLight};color:${t.accent};padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;">${s}</span>`).join('')}</div></div>` : ''}
+              ${languages.length > 0 ? `<div style="margin-bottom:16px;">${sectionHeading('Languages')}<div style="display:flex;flex-wrap:wrap;gap:12px;">${languages.map(l => `<span style="font-size:10px;color:#444;"><strong>${l.langName}</strong> <span style="color:#777;">(${l.langLevel})</span></span>`).join('')}</div></div>` : ''}
               ${references.length > 0 ? `<div>${sectionHeading('References')}${references.map(r => `<div style="margin-bottom:8px;"><strong style="font-size:11px;">${r.refName || ''}</strong><div style="font-size:10px;color:#666;">${r.refTitle || ''}</div><div style="font-size:10px;color:#888;">${[r.refEmail, r.refPhone].filter(Boolean).join(' • ')}</div></div>`).join('')}</div>` : ''}
             </div>`;
     }
@@ -229,6 +279,8 @@ export function renderResumePage(container) {
     const data = collectFormData(form);
     data.experience = collectRepeaterData(form, 'experience');
     data.education = collectRepeaterData(form, 'education');
+    data.highschool = collectRepeaterData(form, 'highschool');
+    data.languages = collectRepeaterData(form, 'languages');
     data.references = collectRepeaterData(form, 'references');
     data.skillsList = (data.skills || '').split(',').map(s => s.trim()).filter(Boolean);
 

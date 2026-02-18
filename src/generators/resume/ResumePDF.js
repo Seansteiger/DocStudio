@@ -129,6 +129,39 @@ function generateClassicResume(doc, data, pal, templateId) {
         });
     }
 
+    // High School
+    if (data.highschool?.length > 0) {
+        y = checkPage(doc, y, 25);
+        y = addSectionHeading(doc, 'High School', y, pal, templateId === 'minimal' ? 'line' : 'underline');
+        data.highschool.forEach(hs => {
+            y = checkPage(doc, y, 15);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(11);
+            setColor(doc, pal.text);
+            doc.text(hs.hsName || '', m, y);
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(9);
+            setColor(doc, pal.muted);
+            doc.text(hs.hsYear || '', PAGE.w - m, y, { align: 'right' });
+            y += 5;
+            setColor(doc, pal.accent);
+            doc.text(hs.hsSubjects || '', m, y);
+            y += 7;
+        });
+    }
+
+    // Languages
+    if (data.languages?.length > 0) {
+        y = checkPage(doc, y, 20);
+        y = addSectionHeading(doc, 'Languages', y, pal, templateId === 'minimal' ? 'line' : 'underline');
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        const langText = data.languages.map(l => `${l.langName} (${l.langLevel})`).join('  •  ');
+        setColor(doc, pal.text);
+        y = addWrappedText(doc, langText, m, y, w, 4.5);
+        y += 6;
+    }
+
     // Skills
     if (data.skillsList?.length > 0) {
         y = checkPage(doc, y, 20);
@@ -260,6 +293,32 @@ function generateSidebarResume(doc, data, pal, templateId) {
             doc.text(`• ${skill}`, 8, sy);
             sy += 5;
         });
+        sy += 4;
+    }
+
+    // Languages in sidebar
+    if (data.languages?.length > 0) {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+        doc.setTextColor(255, 255, 255);
+        doc.text('LANGUAGES', 8, sy);
+        sy += 2;
+        doc.setDrawColor(255, 255, 255);
+        doc.setLineWidth(0.3);
+        doc.line(8, sy, sideW - 8, sy);
+        sy += 6;
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(8);
+        data.languages.forEach(l => {
+            if (sy > PAGE.h - 20) return;
+            doc.setTextColor(220, 230, 245);
+            doc.text(l.langName, 8, sy);
+            doc.setTextColor(160, 180, 210);
+            const levelW = doc.getTextWidth(l.langLevel);
+            doc.text(l.langLevel, sideW - 8 - levelW, sy);
+            sy += 5;
+        });
     }
 
     // Main content
@@ -338,6 +397,33 @@ function generateSidebarResume(doc, data, pal, templateId) {
             doc.setFontSize(9);
             setColor(doc, pal.muted);
             doc.text(`${edu.eduSchool || ''} | ${edu.eduYear || ''}${edu.eduGrade ? ` | ${edu.eduGrade}` : ''}`, mainX, y);
+            y += 7;
+        });
+    }
+
+    // High School
+    if (data.highschool?.length > 0) {
+        y = checkPage(doc, y, 25);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(12);
+        setColor(doc, pal.primary);
+        doc.text('HIGH SCHOOL', mainX, y);
+        y += 2;
+        setFill(doc, pal.accent);
+        doc.rect(mainX, y, 25, 0.8, 'F');
+        y += 7;
+
+        data.highschool.forEach(hs => {
+            y = checkPage(doc, y, 12);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(10);
+            setColor(doc, pal.text);
+            doc.text(hs.hsName || '', mainX, y);
+            y += 4.5;
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(9);
+            setColor(doc, pal.muted);
+            doc.text(`${hs.hsSubjects || ''} | ${hs.hsYear || ''}`, mainX, y);
             y += 7;
         });
     }
