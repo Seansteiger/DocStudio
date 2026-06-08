@@ -1,0 +1,78 @@
+/* Custom styles for Steiger.Online */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Web font overrides for Orbitron and Inter */
+.font-orbitron {
+  font-family: 'Orbitron', sans-serif;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Hide scrollbars but keep functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* A4 Sheet Preview Styling */
+.a4-preview-container {
+  background-color: #ffffff;
+  color: #1e293b;
+  width: 100%;
+  aspect-ratio: 1 / 1.414; /* Standard A4 ratio */
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+}
+
+/* ATS-friendly typography inside preview */
+.cv-preview-content {
+  font-family: 'Arial', 'Helvetica', 'Calibri', sans-serif;
+}
+
+/* Media query to print ONLY the document preview and format it as A4 */
+@media print {
+  html, body {
+    height: auto !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  /* Hide everything on the page */
+  body * {
+    visibility: hidden !important;
+  }
+
+  /* Show only the active document preview and its children */
+  #document-preview-page,
+  #document-preview-page * {
+    visibility: visible !important;
+  }
+
+  /* Absolute position layout to occupy the full print canvas */
+  #document-preview-page {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Set A4 page format */
+  @page {
+    size: A4;
+    margin: 1.5cm;
+  }
+}
