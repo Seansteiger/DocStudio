@@ -200,7 +200,7 @@ const initialNdaData: NdaData = {
   disclosingParty: "Zenith Creative Group Pty Ltd",
   receivingParty: "Lindiwe Dlamini Inc.",
   effectiveDate: "2026-06-08",
-  purpose: "Collaborating on the design and programming of the Steiger.Online Document Workspace Suite.",
+  purpose: "Collaborating on the design and programming of the DocStudio Document Workspace Suite.",
   governingLaw: "Republic of South Africa",
   confidentialityPeriod: "3 Years"
 };
@@ -259,7 +259,7 @@ const ProfilePulse = () => {
       />
       <div className="relative w-12 h-12 rounded-full border-2 border-[#00F2FF] overflow-hidden p-0.5">
         <img 
-          src="https://picsum.photos/seed/steiger/200" 
+          src="https://picsum.photos/seed/docstudio/200" 
           alt="Profile" 
           className="w-full h-full object-cover rounded-full"
         />
@@ -432,7 +432,7 @@ const ExpandedTool: React.FC<{ service: ServiceCardData; onClose: () => void; on
           </div>
           
           <p className="text-gray-300 leading-relaxed mb-8">
-            Manage your {service.title.toLowerCase()} workspace with high-fidelity tools powered by Steiger AI. 
+            Manage your {service.title.toLowerCase()} workspace with high-fidelity tools powered by DocStudio AI. 
             Create professional documents in minutes with futuristic templates.
           </p>
 
@@ -1877,12 +1877,12 @@ const DocumentWorkspace: React.FC<{ toolId: string; onClose: () => void }> = ({ 
 
   const getToolTitle = () => {
     switch (toolId) {
-      case '1': return { main: "Steiger.Online", tag: "ATS & EE Optimized", sub: "South African Professional CV Builder" };
+      case '1': return { main: "DocStudio", tag: "ATS & EE Optimized", sub: "South African Professional CV Builder" };
       case '2': return { main: "Invoice Builder", tag: "VAT Ready", sub: "Professional Tax Invoice Generator" };
       case '3': return { main: "Cover Letter", tag: "AI Optimized", sub: "Persuasive Business Application Builder" };
       case '4': return { main: "Quote Creator", tag: "Itemized Details", sub: "Instant Pricing Quotation Creator" };
       case '5': return { main: "NDA Generator", tag: "Legally Compliant", sub: "Mutual Non-Disclosure Agreement Creator" };
-      default: return { main: "Steiger.Online", tag: "Document Suite", sub: "Professional Document Builder" };
+      default: return { main: "DocStudio", tag: "Document Suite", sub: "Professional Document Builder" };
     }
   };
 
