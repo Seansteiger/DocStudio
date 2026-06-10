@@ -16,6 +16,7 @@ import {
   Trash2,
   Sparkles,
   Printer,
+  Upload,
   ChevronDown,
   ChevronUp,
   Check,
@@ -51,6 +52,503 @@ import {
   QuotationItem,
   NdaData
 } from './types';
+
+// PDF Extraction and Heuristic Parsing Functions
+const parsePdfText = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      try {
+        const arrayBuffer = e.target?.result as ArrayBuffer;
+        if (!arrayBuffer) {
+          reject(new Error("Failed to read file as ArrayBuffer"));
+          return;
+        }
+
+        const pdfjsLib = (window as any).pdfjsLib;
+        if (!pdfjsLib) {
+          reject(new Error("PDF.js library is not loaded. Please verify your internet connection."));
+          return;
+        }
+
+        const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+        const pdf = await loadingTask.promise;
+        let fullText = "";
+
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const textContent = await page.getTextContent();
+          const textItems = textContent.items.map((item: any) => item.str);
+          fullText += textItems.join(" ") + "\n";
+        }
+
+        resolve(fullText);
+      } catch (err) {
+        reject(err);
+      }
+    };
+    reader.onerror = () => reject(new Error("File reading error"));
+    reader.readAsArrayBuffer(file);
+  });
+};
+
+const parseDocumentText = (text: string): { toolId: string; data: any } => {
+  console.log("Extracted PDF Text:", text);
+
+  // 1. Detect Document Type
+  if (text.includes("National ID Number") || text.includes("Employment Equity (EE)") || text.includes("EMPLOYMENT HISTORY") || text.includes("EDUCATION & QUALIFICATIONS") || text.includes("KEY CORE COMPETENCIES")) {
+    const cv: Partial<SouthAfricanCvData> = {
+      fullName: "", idNumber: "", passportNumber: "", useIdNumber: true,
+      gender: "Male", demographics: "African", driversLicense: "None", hasPdp: false,
+      cellNumber: "", emailAddress: "", linkedInUrl: "", currentLocation: "",
+      noticePeriod: "Immediate", professionalSummary: "", languages: [],
+      workExperience: [], education: [], skills: [], references: []
+    };
+
+    const nameMatch = text.match(/^\s*([A-Z\s]{3,30})/);
+    if (nameMatch) {
+      cv.fullName = nameMatch[1].trim();
+    } else {
+      const phoneMatchIndex = text.search(/(\+27|0\d{2})/);
+      if (phoneMatchIndex > 0) {
+        cv.fullName = text.slice(0, phoneMatchIndex).trim();
+      }
+    }
+
+    const cellMatch = text.match(/(?:\+27|0)\s*\d{2}\s*\d{3}\s*\d{4}/);
+    if (cellMatch) cv.cellNumber = cellMatch[0].trim();
+
+    const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+    if (emailMatch) cv.emailAddress = emailMatch[0].trim();
+
+    const liMatch = text.match(/linkedin\.com\/in\/\S+/);
+    if (liMatch) cv.linkedInUrl = liMatch[0].trim();
+
+    const locMatch = text.match(/(?:Johannesburg|Pretoria|Midrand|Randburg|Sandton|Soweto|Benoni|Kempton Park|Roodepoort|Centurion|Cape Town|Stellenbosch|Durban|Gauteng|Western Cape|KwaZulu-Natal|Eastern Cape|Free State|Limpopo|Mpumalanga|North West|Northern Cape)[^,\n]*,\s*(?:Gauteng|Western Cape|KwaZulu-Natal|Eastern Cape|Free State|Limpopo|Mpumalanga|North West|Northern Cape)/i);
+    if (locMatch) cv.currentLocation = locMatch[0].trim();
+
+    const idMatch = text.match(/National ID Number:\s*(\d{13})/);
+    if (idMatch) {
+      cv.idNumber = idMatch[1].trim();
+      cv.useIdNumber = true;
+    } else {
+      const passMatch = text.match(/Passport Number:\s*(\S+)/);
+      if (passMatch) {
+        cv.passportNumber = passMatch[1].trim();
+        cv.useIdNumber = false;
+      }
+    }
+
+    const eeMatch = text.match(/Employment Equity \(EE\):\s*(\w+)\s*\((\w+[^)]*)\)/);
+    if (eeMatch) {
+      cv.demographics = eeMatch[1].trim();
+      cv.gender = eeMatch[2].trim();
+    }
+
+    const dlMatch = text.match(/Driver's License:\s*([^(\n]+)/);
+    if (dlMatch) {
+      const val = dlMatch[1].trim().toLowerCase();
+      if (val.includes("code 8") || val.includes(" b ")) {
+        cv.driversLicense = "Code 8 / B";
+      } else if (val.includes("code 10") || val.includes("c1")) {
+        cv.driversLicense = "Code 10 / C1";
+      } else if (val.includes("code 14") || val.includes("ec")) {
+        cv.driversLicense = "Code 14 / EC";
+      } else {
+        cv.driversLicense = "None";
+      }
+    }
+    if (text.includes("PrDP Certified")) cv.hasPdp = true;
+
+    const npMatch = text.match(/Notice Period:\s*([^\n]+)/);
+    if (npMatch) {
+      const val = npMatch[1].trim().toLowerCase();
+      if (val.includes("immediate") || val.includes("unemployed")) {
+        cv.noticePeriod = "Immediate";
+      } else if (val.includes("2 week") || val.includes("two week")) {
+        cv.noticePeriod = "2 Weeks";
+      } else if (val.includes("1 calendar") || val.includes("one calendar") || val.includes("1 month") || val.includes("one month")) {
+        cv.noticePeriod = "1 Calendar Month";
+      } else if (val.includes("3 month") || val.includes("three month")) {
+        cv.noticePeriod = "3 Months";
+      } else {
+        cv.noticePeriod = "Immediate";
+      }
+    }
+
+    const summaryStart = text.indexOf("PROFESSIONAL SUMMARY");
+    if (summaryStart !== -1) {
+      const remaining = text.slice(summaryStart + "PROFESSIONAL SUMMARY".length);
+      const nextSectionIdx = Math.min(
+        remaining.includes("LANGUAGES") ? remaining.indexOf("LANGUAGES") : Infinity,
+        remaining.includes("EMPLOYMENT HISTORY") ? remaining.indexOf("EMPLOYMENT HISTORY") : Infinity,
+        remaining.includes("EDUCATION & QUALIFICATIONS") ? remaining.indexOf("EDUCATION & QUALIFICATIONS") : Infinity
+      );
+      if (nextSectionIdx !== Infinity) {
+        cv.professionalSummary = remaining.slice(0, nextSectionIdx).trim();
+      } else {
+        cv.professionalSummary = remaining.trim();
+      }
+    }
+
+    const langStart = text.indexOf("LANGUAGES");
+    if (langStart !== -1) {
+      const remaining = text.slice(langStart + "LANGUAGES".length);
+      const nextSectionIdx = Math.min(
+        remaining.includes("EMPLOYMENT HISTORY") ? remaining.indexOf("EMPLOYMENT HISTORY") : Infinity,
+        remaining.includes("EDUCATION & QUALIFICATIONS") ? remaining.indexOf("EDUCATION & QUALIFICATIONS") : Infinity,
+        remaining.includes("KEY CORE COMPETENCIES") ? remaining.indexOf("KEY CORE COMPETENCIES") : Infinity
+      );
+      const langText = nextSectionIdx !== Infinity ? remaining.slice(0, nextSectionIdx) : remaining;
+      const regex = /(\w+)\s*\(Spoken:\s*(\w+)\s*\|\s*Written:\s*(\w+)\)/g;
+      let match;
+      const languagesList = [];
+      while ((match = regex.exec(langText)) !== null) {
+        languagesList.push({ name: match[1], speakProficiency: match[2], writeProficiency: match[3] });
+      }
+      cv.languages = languagesList;
+    }
+
+    const skillsStart = text.indexOf("KEY CORE COMPETENCIES");
+    if (skillsStart !== -1) {
+      const remaining = text.slice(skillsStart + "KEY CORE COMPETENCIES".length);
+      const nextSectionIdx = remaining.includes("PROFESSIONAL REFERENCES") ? remaining.indexOf("PROFESSIONAL REFERENCES") : Infinity;
+      const skillsText = nextSectionIdx !== Infinity ? remaining.slice(0, nextSectionIdx) : remaining;
+      cv.skills = skillsText.split(/•|•/).map(s => s.trim()).filter(s => s.length > 0);
+    }
+
+    const expStart = text.indexOf("EMPLOYMENT HISTORY");
+    if (expStart !== -1) {
+      const remaining = text.slice(expStart + "EMPLOYMENT HISTORY".length);
+      const nextSectionIdx = Math.min(
+        remaining.includes("EDUCATION & QUALIFICATIONS") ? remaining.indexOf("EDUCATION & QUALIFICATIONS") : Infinity,
+        remaining.includes("KEY CORE COMPETENCIES") ? remaining.indexOf("KEY CORE COMPETENCIES") : Infinity
+      );
+      const expText = nextSectionIdx !== Infinity ? remaining.slice(0, nextSectionIdx) : remaining;
+      const jobs = [];
+      const lines = expText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      let currentJob: any = null;
+
+      for (let line of lines) {
+        const dateMatch = line.match(/(.*)(\d{2}\/\d{4}\s*—\s*(?:\d{2}\/\d{4}|Current|Present|Ongoing))/i);
+        if (dateMatch) {
+          if (currentJob) jobs.push(currentJob);
+          currentJob = {
+            id: Date.now().toString() + Math.random().toString(),
+            jobTitle: dateMatch[1].trim(),
+            startDate: dateMatch[2].split("—")[0].trim(),
+            endDate: dateMatch[2].split("—")[1].trim(),
+            companyName: "", location: "", responsibilities: ""
+          };
+        } else if (currentJob) {
+          if (!currentJob.companyName) {
+            const locMatch = line.match(/(.*),\s*(Gauteng|Western Cape|KwaZulu-Natal|Eastern Cape|Free State|Limpopo|Mpumalanga|North West|Northern Cape)/i);
+            if (locMatch) {
+              currentJob.companyName = locMatch[1].trim();
+              currentJob.location = locMatch[0].trim().replace(locMatch[1].trim(), "").replace(/^,\s*/, "").trim();
+            } else {
+              currentJob.companyName = line;
+            }
+          } else if (line.startsWith("•") || line.startsWith("-") || line.startsWith("*")) {
+            currentJob.responsibilities += (currentJob.responsibilities ? "\n" : "") + line;
+          } else {
+            currentJob.responsibilities += (currentJob.responsibilities ? "\n" : "") + "- " + line;
+          }
+        }
+      }
+      if (currentJob) jobs.push(currentJob);
+      cv.workExperience = jobs;
+    }
+
+    const eduStart = text.indexOf("EDUCATION & QUALIFICATIONS");
+    if (eduStart !== -1) {
+      const remaining = text.slice(eduStart + "EDUCATION & QUALIFICATIONS".length);
+      const nextSectionIdx = remaining.includes("KEY CORE COMPETENCIES") ? remaining.indexOf("KEY CORE COMPETENCIES") : Infinity;
+      const eduText = nextSectionIdx !== Infinity ? remaining.slice(0, nextSectionIdx) : remaining;
+      const edus = [];
+      const lines = eduText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      let currentEdu: any = null;
+
+      for (let line of lines) {
+        const yearMatch = line.match(/(.*)(\d{4})$/);
+        if (yearMatch) {
+          if (currentEdu) edus.push(currentEdu);
+          currentEdu = {
+            id: Date.now().toString() + Math.random().toString(),
+            qualificationName: yearMatch[1].trim(),
+            yearCompleted: yearMatch[2].trim(),
+            institution: ""
+          };
+        } else if (currentEdu) {
+          currentEdu.institution = line;
+          edus.push(currentEdu);
+          currentEdu = null;
+        }
+      }
+      if (currentEdu) edus.push(currentEdu);
+      cv.education = edus;
+    }
+
+    const refStart = text.indexOf("PROFESSIONAL REFERENCES");
+    if (refStart !== -1) {
+      const remaining = text.slice(refStart + "PROFESSIONAL REFERENCES".length);
+      const refs = [];
+      const lines = remaining.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      let currentRef: any = null;
+
+      for (let line of lines) {
+        const phoneMatch = line.match(/Phone:\s*([^\n]+)/i);
+        const emailMatch = line.match(/Email:\s*([^\n]+)/i);
+        const relationMatch = line.match(/Relation:\s*([^\n]+)/i);
+
+        if (phoneMatch) {
+          if (!currentRef) {
+            currentRef = { id: Date.now().toString() + Math.random().toString(), referenceName: "Reference Name", companyTitle: "", contactEmail: "", contactPhone: "", relationship: "" };
+          }
+          currentRef.contactPhone = phoneMatch[1].trim();
+        } else if (emailMatch) {
+          if (!currentRef) {
+            currentRef = { id: Date.now().toString() + Math.random().toString(), referenceName: "Reference Name", companyTitle: "", contactEmail: "", contactPhone: "", relationship: "" };
+          }
+          currentRef.contactEmail = emailMatch[1].trim();
+        } else if (relationMatch) {
+          if (!currentRef) {
+            currentRef = { id: Date.now().toString() + Math.random().toString(), referenceName: "Reference Name", companyTitle: "", contactEmail: "", contactPhone: "", relationship: "" };
+          }
+          currentRef.relationship = relationMatch[1].trim();
+        } else {
+          // Plain text line (Name or Company Title)
+          if (!currentRef) {
+            currentRef = {
+              id: Date.now().toString() + Math.random().toString(),
+              referenceName: line, companyTitle: "", contactEmail: "", contactPhone: "", relationship: ""
+            };
+          } else if (!currentRef.companyTitle) {
+            currentRef.companyTitle = line;
+          } else {
+            // Already has name and title, so this starts a new reference
+            refs.push(currentRef);
+            currentRef = {
+              id: Date.now().toString() + Math.random().toString(),
+              referenceName: line, companyTitle: "", contactEmail: "", contactPhone: "", relationship: ""
+            };
+          }
+        }
+      }
+      if (currentRef) refs.push(currentRef);
+      cv.references = refs;
+    }
+
+    return { toolId: '1', data: cv };
+
+  } else if (text.includes("TAX INVOICE") || text.includes("INVOICE NO:") || text.includes("BILLED TO:")) {
+    const inv: Partial<InvoiceData> = {
+      companyName: "", companyEmail: "", companyCell: "", companyAddress: "",
+      clientName: "", clientEmail: "", clientCell: "", clientAddress: "",
+      invoiceNumber: "", invoiceDate: "", dueDate: "", items: [],
+      taxRate: 15, bankName: "", accountHolder: "", accountNumber: "", branchCode: ""
+    };
+
+    const invNumMatch = text.match(/INVOICE NO:\s*(\S+)/);
+    if (invNumMatch) inv.invoiceNumber = invNumMatch[1].trim();
+
+    const dateMatch = text.match(/Invoice Date:\s*(\S+)/);
+    if (dateMatch) inv.invoiceDate = dateMatch[1].trim();
+    const dueMatch = text.match(/Payment Due:\s*(\S+)/);
+    if (dueMatch) inv.dueDate = dueMatch[1].trim();
+
+    const providerStart = text.indexOf("TAX INVOICE");
+    if (providerStart !== -1) {
+      const preText = text.slice(0, providerStart);
+      const lines = preText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      if (lines.length > 0) inv.companyName = lines[lines.length - 1];
+    }
+
+    const clientStart = text.indexOf("BILLED TO:");
+    if (clientStart !== -1) {
+      const remaining = text.slice(clientStart + "BILLED TO:".length);
+      const lines = remaining.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      if (lines.length > 0) inv.clientName = lines[0];
+      const emailMatch = remaining.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+      if (emailMatch) inv.clientEmail = emailMatch[0].trim();
+      const cellMatch = remaining.match(/(?:\+27|0)\s*\d{2}\s*\d{3}\s*\d{4}/);
+      if (cellMatch) inv.clientCell = cellMatch[0].trim();
+    }
+
+    const bankMatch = text.match(/Bank Name:\s*([^\n]+)/);
+    if (bankMatch) inv.bankName = bankMatch[1].trim();
+    const holderMatch = text.match(/Account Holder:\s*([^\n]+)/);
+    if (holderMatch) inv.accountHolder = holderMatch[1].trim();
+    const numMatch = text.match(/Account Number:\s*([^\n]+)/);
+    if (numMatch) inv.accountNumber = numMatch[1].trim();
+    const branchMatch = text.match(/Branch Code:\s*([^\n]+)/);
+    if (branchMatch) inv.branchCode = branchMatch[1].trim();
+
+    const vatMatch = text.match(/VAT\s*\((\d+)%\):/);
+    if (vatMatch) inv.taxRate = parseInt(vatMatch[1]);
+
+    const tableStart = text.indexOf("DESCRIPTION");
+    const subtotalIdx = text.indexOf("Subtotal:");
+
+    if (tableStart !== -1 && subtotalIdx !== -1) {
+      const tableText = text.slice(tableStart, subtotalIdx);
+      const lines = tableText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      const parsedItems = [];
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i];
+        const rowMatch = line.match(/(.*?)\s+(\d+)\s+R?\s*([\d,.]+)\s+R?\s*([\d,.]+)$/);
+        if (rowMatch) {
+          parsedItems.push({
+            id: Date.now().toString() + Math.random().toString(),
+            description: rowMatch[1].trim(), 
+            quantity: parseInt(rowMatch[2]), 
+            rate: parseFloat(rowMatch[3].replace(/,/g, ''))
+          });
+        }
+      }
+      if (parsedItems.length > 0) inv.items = parsedItems;
+    }
+
+    return { toolId: '2', data: inv };
+
+  } else if (text.includes("RE: APPLICATION FOR THE POSITION OF") || text.includes("Dear Hiring Manager")) {
+    const letter: Partial<CoverLetterData> = {
+      fullName: "", emailAddress: "", cellNumber: "", linkedInUrl: "", currentLocation: "",
+      recipientName: "", recipientTitle: "", companyName: "", companyAddress: "",
+      date: "", jobTitle: "", paragraphs: []
+    };
+
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+    if (lines.length > 0) letter.fullName = lines[0];
+
+    const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+    if (emailMatch) letter.emailAddress = emailMatch[0].trim();
+    const cellMatch = text.match(/(?:\+27|0)\s*\d{2}\s*\d{3}\s*\d{4}/);
+    if (cellMatch) letter.cellNumber = cellMatch[0].trim();
+    const liMatch = text.match(/linkedin\.com\/in\/\S+/);
+    if (liMatch) letter.linkedInUrl = liMatch[0].trim();
+
+    const dateMatch = text.match(/\d{4}-\d{2}-\d{2}/);
+    if (dateMatch) letter.date = dateMatch[0];
+
+    const subjectMatch = text.match(/RE:\s*APPLICATION\s*FOR\s*THE\s*POSITION\s*OF\s*([^\n]+)/i);
+    if (subjectMatch) letter.jobTitle = subjectMatch[1].replace(/RE:\s*/i, "").trim();
+
+    const dateIdx = lines.findIndex(l => l.match(/\d{4}-\d{2}-\d{2}/));
+    if (dateIdx !== -1 && lines.length > dateIdx + 3) {
+      letter.recipientName = lines[dateIdx + 1];
+      letter.recipientTitle = lines[dateIdx + 2];
+      letter.companyName = lines[dateIdx + 3];
+      const dearIdx = lines.findIndex(l => l.startsWith("Dear"));
+      if (dearIdx !== -1 && dearIdx > dateIdx + 4) {
+        letter.companyAddress = lines.slice(dateIdx + 4, dearIdx).join(", ");
+      }
+    }
+
+    const dearIdx = lines.findIndex(l => l.startsWith("Dear"));
+    const sincIdx = lines.findIndex(l => l.startsWith("Sincerely") || l.startsWith("Yours"));
+    if (dearIdx !== -1 && sincIdx !== -1 && sincIdx > dearIdx + 1) {
+      letter.paragraphs = lines.slice(dearIdx + 1, sincIdx);
+    }
+
+    return { toolId: '3', data: letter };
+
+  } else if (text.includes("PRICE QUOTATION") || text.includes("QUOTE NO:") || text.includes("QUOTED TO:")) {
+    const quote: Partial<QuotationData> = {
+      providerName: "", providerEmail: "", providerPhone: "", providerAddress: "",
+      clientName: "", clientEmail: "", clientPhone: "", clientAddress: "",
+      quoteNumber: "", quoteDate: "", validUntil: "", items: [], termsAndConditions: ""
+    };
+
+    const quoteNumMatch = text.match(/QUOTE NO:\s*(\S+)/);
+    if (quoteNumMatch) quote.quoteNumber = quoteNumMatch[1].trim();
+
+    const dateMatch = text.match(/Quote Date:\s*(\S+)/);
+    if (dateMatch) quote.quoteDate = dateMatch[1].trim();
+    const validMatch = text.match(/Valid Until:\s*(\S+)/);
+    if (validMatch) quote.validUntil = validMatch[1].trim();
+
+    const clientIdx = text.indexOf("QUOTED TO:");
+    if (clientIdx !== -1) {
+      const preText = text.slice(0, clientIdx);
+      const lines = preText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      if (lines.length > 3) {
+        quote.providerName = lines[lines.length - 4];
+        quote.providerEmail = lines[lines.length - 3];
+        quote.providerPhone = lines[lines.length - 2];
+        quote.providerAddress = lines[lines.length - 1];
+      }
+    }
+
+    if (clientIdx !== -1) {
+      const remaining = text.slice(clientIdx + "QUOTED TO:".length);
+      const lines = remaining.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      if (lines.length > 0) quote.clientName = lines[0];
+      const emailMatch = remaining.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+      if (emailMatch) quote.clientEmail = emailMatch[0].trim();
+      const cellMatch = remaining.match(/(?:\+27|0)\s*\d{2}\s*\d{3}\s*\d{4}/);
+      if (cellMatch) quote.clientPhone = cellMatch[0].trim();
+    }
+
+    const tableStart = text.indexOf("DESCRIPTION");
+    const totalIdx = text.indexOf("ESTIMATED TOTAL:");
+    if (tableStart !== -1 && totalIdx !== -1) {
+      const tableText = text.slice(tableStart, totalIdx);
+      const lines = tableText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      const parsedItems = [];
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i];
+        const rowMatch = line.match(/(.*?)\s+(\d+)\s+R?\s*([\d,.]+)\s+R?\s*([\d,.]+)$/);
+        if (rowMatch) {
+          parsedItems.push({
+            id: Date.now().toString() + Math.random().toString(),
+            description: rowMatch[1].trim(), 
+            quantity: parseInt(rowMatch[2]), 
+            rate: parseFloat(rowMatch[3].replace(/,/g, ''))
+          });
+        }
+      }
+      if (parsedItems.length > 0) quote.items = parsedItems;
+    }
+
+    const termsIdx = text.indexOf("TERMS & CONDITIONS:");
+    if (termsIdx !== -1) {
+      quote.termsAndConditions = text.slice(termsIdx + "TERMS & CONDITIONS:".length).trim();
+    }
+
+    return { toolId: '4', data: quote };
+
+  } else if (text.includes("Non-Disclosure Agreement") || text.includes("CONFIDENTIALITY PERIOD") || text.includes("Governing Law")) {
+    const nda: Partial<NdaData> = {
+      disclosingParty: "", receivingParty: "", effectiveDate: "", purpose: "", governingLaw: "", confidentialityPeriod: ""
+    };
+
+    const dateMatch = text.match(/effective as of\s*([^\(]+)/i);
+    if (dateMatch) nda.effectiveDate = dateMatch[1].trim();
+
+    const partiesStart = text.indexOf("by and between:");
+    const partiesEnd = text.indexOf("Hereinafter referred to");
+    if (partiesStart !== -1 && partiesEnd !== -1) {
+      const partiesText = text.slice(partiesStart + "by and between:".length, partiesEnd);
+      const lines = partiesText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      if (lines.length > 0) nda.disclosingParty = lines[0].replace(/,\s*and$/i, "").trim();
+      if (lines.length > 1) nda.receivingParty = lines[1].trim();
+    }
+
+    const purposeMatch = text.match(/sole purpose of:\s*([^\n.]+)/i);
+    if (purposeMatch) nda.purpose = purposeMatch[1].trim();
+
+    const termMatch = text.match(/period of\s*([^\n,]+?)\s*from the Effective Date/i);
+    if (termMatch) nda.confidentialityPeriod = termMatch[1].trim();
+
+    const govMatch = text.match(/laws of the\s*([^\n.]+)/i);
+    if (govMatch) nda.governingLaw = govMatch[1].trim();
+
+    return { toolId: '5', data: nda };
+  }
+
+  throw new Error("Could not identify document type or structure in this PDF.");
+};
 
 // Initial South African CV Mock Data
 const initialCvData: SouthAfricanCvData = {
@@ -472,13 +970,27 @@ const ExpandedTool: React.FC<{ service: ServiceCardData; onClose: () => void; on
 };
 
 // Generic Document Workspace Component (Dual-Pane)
-const DocumentWorkspace: React.FC<{ toolId: string; onClose: () => void }> = ({ toolId, onClose }) => {
+const DocumentWorkspace: React.FC<{ 
+  toolId: string; 
+  onClose: () => void; 
+  initialData?: any;
+}> = ({ toolId, onClose, initialData }) => {
   // Document Type States
-  const [cvData, setCvData] = useState<SouthAfricanCvData>(initialCvData);
-  const [invoiceData, setInvoiceData] = useState<InvoiceData>(initialInvoiceData);
-  const [coverLetterData, setCoverLetterData] = useState<CoverLetterData>(initialCoverLetterData);
-  const [quotationData, setQuotationData] = useState<QuotationData>(initialQuotationData);
-  const [ndaData, setNdaData] = useState<NdaData>(initialNdaData);
+  const [cvData, setCvData] = useState<SouthAfricanCvData>(() => 
+    toolId === '1' && initialData ? { ...initialCvData, ...initialData } : initialCvData
+  );
+  const [invoiceData, setInvoiceData] = useState<InvoiceData>(() => 
+    toolId === '2' && initialData ? { ...initialInvoiceData, ...initialData } : initialInvoiceData
+  );
+  const [coverLetterData, setCoverLetterData] = useState<CoverLetterData>(() => 
+    toolId === '3' && initialData ? { ...initialCoverLetterData, ...initialData } : initialCoverLetterData
+  );
+  const [quotationData, setQuotationData] = useState<QuotationData>(() => 
+    toolId === '4' && initialData ? { ...initialQuotationData, ...initialData } : initialQuotationData
+  );
+  const [ndaData, setNdaData] = useState<NdaData>(() => 
+    toolId === '5' && initialData ? { ...initialNdaData, ...initialData } : initialNdaData
+  );
 
   // Workspace Local States
   const [jobCategory, setJobCategory] = useState<string>("Web Development");
@@ -518,6 +1030,34 @@ const DocumentWorkspace: React.FC<{ toolId: string; onClose: () => void }> = ({ 
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
+  };
+
+  const handleWorkspaceImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      alert("Extracting document data from PDF... Please wait.");
+      const text = await parsePdfText(file);
+      const { toolId: parsedToolId, data } = parseDocumentText(text);
+
+      if (parsedToolId !== toolId) {
+        const toolNames: { [key: string]: string } = { '1': 'CV', '2': 'Invoice', '3': 'Cover Letter', '4': 'Quotation', '5': 'NDA' };
+        alert(`This PDF appears to be a ${toolNames[parsedToolId] || 'unknown type'}, but you are in the ${toolNames[toolId]} workspace.`);
+        return;
+      }
+
+      if (toolId === '1') setCvData(prev => ({ ...prev, ...data }));
+      else if (toolId === '2') setInvoiceData(prev => ({ ...prev, ...data }));
+      else if (toolId === '3') setCoverLetterData(prev => ({ ...prev, ...data }));
+      else if (toolId === '4') setQuotationData(prev => ({ ...prev, ...data }));
+      else if (toolId === '5') setNdaData(prev => ({ ...prev, ...data }));
+
+      alert("Successfully loaded data into workspace!");
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || "Failed to parse PDF.");
+    }
   };
 
   // SA ID check
@@ -1966,10 +2506,26 @@ const DocumentWorkspace: React.FC<{ toolId: string; onClose: () => void }> = ({ 
             <p className="text-xs text-gray-400">{titleInfo.sub}</p>
           </div>
         </div>
-        <button onClick={() => window.print()} className="bg-gradient-to-r from-[#00F2FF] to-[#8B5CF6] text-black font-bold py-3 px-6 rounded-2xl font-orbitron text-sm transition-all hover:shadow-[0_0_20px_rgba(0,242,255,0.4)] flex items-center gap-2 scale-100 hover:scale-105 active:scale-95">
-          <Printer size={18} />
-          PRINT / SAVE PDF
-        </button>
+        <div className="flex items-center gap-3">
+          <input 
+            type="file" 
+            id="workspace-pdf-upload" 
+            accept=".pdf" 
+            onChange={handleWorkspaceImport} 
+            className="hidden" 
+          />
+          <button 
+            onClick={() => document.getElementById('workspace-pdf-upload')?.click()} 
+            className="bg-white/5 border border-white/10 text-white font-bold py-3 px-6 rounded-2xl font-orbitron text-sm transition-all hover:bg-white/10 flex items-center gap-2 scale-100 hover:scale-105 active:scale-95"
+          >
+            <Upload size={18} />
+            IMPORT PDF
+          </button>
+          <button onClick={() => window.print()} className="bg-gradient-to-r from-[#00F2FF] to-[#8B5CF6] text-black font-bold py-3 px-6 rounded-2xl font-orbitron text-sm transition-all hover:shadow-[0_0_20px_rgba(0,242,255,0.4)] flex items-center gap-2 scale-100 hover:scale-105 active:scale-95">
+            <Printer size={18} />
+            PRINT / SAVE PDF
+          </button>
+        </div>
       </header>
 
       {/* Main Two-Pane Layout */}
@@ -2014,6 +2570,30 @@ const App: React.FC = () => {
   const [selectedService, setSelectedService] = useState<ServiceCardData | null>(null);
   const [isWorkspaceActive, setIsWorkspaceActive] = useState<boolean>(false);
   const [activeToolId, setActiveToolId] = useState<string>('1');
+  const [initialData, setInitialData] = useState<any>(null);
+
+  const handleImportPdfClick = () => {
+    document.getElementById('dashboard-pdf-upload')?.click();
+  };
+
+  const handleDashboardPdfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      alert("Extracting document data from PDF... Please wait.");
+      const text = await parsePdfText(file);
+      const { toolId, data } = parseDocumentText(text);
+
+      setActiveToolId(toolId);
+      setInitialData(data);
+      setIsWorkspaceActive(true);
+      alert("Successfully loaded data from PDF!");
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || "Failed to parse PDF. Please ensure it is a valid DocStudio PDF.");
+    }
+  };
 
   const services: ServiceCardData[] = [
     { id: '1', title: 'CV Builder', description: 'ATS & EE optimized South African CVs', icon: <FileText size={28} />, color: '#00F2FF' },
@@ -2032,7 +2612,16 @@ const App: React.FC = () => {
   };
 
   if (isWorkspaceActive) {
-    return <DocumentWorkspace toolId={activeToolId} onClose={() => setIsWorkspaceActive(false)} />;
+    return (
+      <DocumentWorkspace 
+        toolId={activeToolId} 
+        initialData={initialData} 
+        onClose={() => {
+          setIsWorkspaceActive(false);
+          setInitialData(null);
+        }} 
+      />
+    );
   }
 
   return (
@@ -2059,6 +2648,36 @@ const App: React.FC = () => {
                 layoutId={`card-${service.id}`}
               />
             ))}
+
+            {/* Premium Import PDF Card to balance the 3-column grid */}
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={handleImportPdfClick}
+              className="relative cursor-pointer group"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-3xl -z-10" />
+              <div className="bg-[#10B981]/5 backdrop-blur-2xl border border-[#10B981]/20 rounded-3xl p-6 h-full flex flex-col justify-between transition-all group-hover:border-[#10B981]/50 group-hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+                <div className="p-3 rounded-2xl w-fit mb-4 bg-[#10B981]/15 flex items-center justify-center text-[#10B981]">
+                  <Upload size={28} />
+                </div>
+                <div>
+                  <h3 className="text-white font-orbitron font-bold text-lg mb-1">Import PDF</h3>
+                  <p className="text-gray-400 text-xs leading-relaxed">Upload and edit a previously generated document</p>
+                </div>
+                <div className="mt-4 w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                  <div className="h-full w-[100%] bg-[#10B981]" />
+                </div>
+              </div>
+            </motion.div>
+            
+            <input 
+              type="file" 
+              id="dashboard-pdf-upload" 
+              accept=".pdf" 
+              onChange={handleDashboardPdfUpload} 
+              className="hidden" 
+            />
           </div>
         </div>
 
