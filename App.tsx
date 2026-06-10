@@ -552,78 +552,64 @@ const parseDocumentText = (text: string): { toolId: string; data: any } => {
 
 // Initial South African CV Mock Data
 const initialCvData: SouthAfricanCvData = {
-  fullName: "Lindiwe Dlamini",
-  idNumber: "9604125089083",
+  fullName: "Neo Sekatane",
+  idNumber: "0305135423088",
   passportNumber: "",
   useIdNumber: true,
-  gender: "Female",
+  gender: "Male",
   demographics: "African",
-  driversLicense: "Code 8 / B",
+  driversLicense: "None",
   hasPdp: false,
   languages: [
     { name: "English", speakProficiency: "Fluent", writeProficiency: "Fluent" },
-    { name: "isiZulu", speakProficiency: "Native", writeProficiency: "Fluent" },
-    { name: "Afrikaans", speakProficiency: "Conversational", writeProficiency: "Basic" }
+    { name: "Sepedi", speakProficiency: "Native", writeProficiency: "Fluent" },
+    { name: "isiZulu", speakProficiency: "Fluent", writeProficiency: "Basic" },
+    { name: "Xitsonga", speakProficiency: "Conversational", writeProficiency: "Basic" }
   ],
-  cellNumber: "+27 72 345 6789",
-  emailAddress: "lindiwe.dlamini@outlook.com",
-  linkedInUrl: "linkedin.com/in/lindiwedlamini",
-  currentLocation: "Randburg, Gauteng",
-  noticePeriod: "1 Calendar Month",
-  professionalSummary: "Detail-oriented Business Analyst with 4+ years of experience in the South African banking sector. Skilled in mapping business processes, translating stakeholder requirements, and running Agile sprints to improve efficiency.",
+  cellNumber: "+27 69 975 1347",
+  emailAddress: "nsdsekatane@gmail.com",
+  linkedInUrl: "",
+  currentLocation: "Johannesburg, Gauteng",
+  noticePeriod: "Immediate",
+  professionalSummary: "Strategic and well coordinated software programmer with 1+ years of experience working at Jozi Student Hub. Excels at computer literacy, digital file management as well as programming. Proficient social skills and well spoken.",
   workExperience: [
     {
       id: "w1",
-      jobTitle: "Business Analyst",
-      companyName: "Nedbank Group Ltd",
-      location: "Sandton, Gauteng",
-      startDate: "03/2022",
-      endDate: "Present",
-      responsibilities: "- Led requirements gathering workshops with retail banking executives to define project scopes.\n- Drafted functional and non-functional requirement specifications for mobile payments systems.\n- Reduced process bottlenecks by 15% through BPMN workflow re-engineering."
-    },
-    {
-      id: "w2",
-      jobTitle: "Junior Analyst",
-      companyName: "SNG Grant Thornton",
+      jobTitle: "Software Programmer",
+      companyName: "Jozi Student Hub (Pty) Ltd",
       location: "Johannesburg, Gauteng",
-      startDate: "01/2020",
-      endDate: "02/2022",
-      responsibilities: "- Assisted senior consultants in auditing business processes and identifying compliance risks.\n- Prepared data analytics dashboards using PowerBI to report project milestones.\n- Compiled client reports detailing standard operating procedure recommendations."
+      startDate: "02/2025",
+      endDate: "02/2026",
+      responsibilities: "- Developed the ecommerce store www.jozistudenthub.co.za, which is their main source of revenue.\n- Drafted their store policies.\n- Simplified their store management system so that it is easier to run."
     }
   ],
   education: [
     {
       id: "e1",
-      qualificationName: "Bachelor of Commerce in Information Systems",
-      institution: "University of the Witwatersrand",
-      yearCompleted: "2019"
-    },
-    {
-      id: "e2",
-      qualificationName: "National Senior Certificate (Matric - 6 Distinctions)",
-      institution: "Parktown High School for Girls",
-      yearCompleted: "2015"
+      qualificationName: "National Senior Certificate (Matric - 2 Distinctions)",
+      institution: "Hulwazi Secondary School",
+      yearCompleted: "2020"
     }
   ],
   references: [
     {
       id: "r1",
-      referenceName: "Sarah Jenkins",
-      companyTitle: "Senior Project Manager at Nedbank",
-      contactEmail: "s.jenkins@nedbank.co.za",
-      contactPhone: "+27 11 294 0000",
-      relationship: "Direct Manager"
+      referenceName: "Sean Steiger",
+      companyTitle: "CEO at Jozi Student Hub",
+      contactEmail: "onlinesteiger@gmail.com",
+      contactPhone: "+27 62 365 7931",
+      relationship: "Previous Employer"
     },
     {
       id: "r2",
-      referenceName: "Dr. David Ndlovu",
-      companyTitle: "Partner at SNG Grant Thornton",
-      contactEmail: "d.ndlovu@sng-gt.co.za",
-      contactPhone: "+27 11 251 1000",
-      relationship: "Career Mentor & Supervisor"
+      referenceName: "Nqobile Ngwenya",
+      companyTitle: "Teacher at Hulwazi Secondary School",
+      contactEmail: "",
+      contactPhone: "+27 61 746 7590",
+      relationship: "Teacher & Mentor"
     }
   ],
-  skills: ["Business Analysis", "BPMN", "SQL", "Agile (Scrum)", "Requirements Gathering", "UML Modeling", "Microsoft PowerBI"]
+  skills: ["Computer Literacy", "Software Programming", "Communication"]
 };
 
 // Initial Invoice Mock Data
