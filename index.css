@@ -73,6 +73,6 @@ body {
   /* Set A4 page format */
   @page {
     size: A4;
-    margin: 1.5cm;
+    margin: 0;
   }
 }

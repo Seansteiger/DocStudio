@@ -1467,7 +1467,7 @@ const DocumentWorkspace: React.FC<{ toolId: string; onClose: () => void }> = ({ 
       </div>
 
       {/* Personal Details & EE Metrics */}
-      <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs text-slate-700 bg-slate-50 p-2.5 rounded border border-slate-100">
+      <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs text-slate-700 bg-slate-50 p-2.5 rounded border border-slate-100">
         <div>
           <strong>{cvData.useIdNumber ? "National ID Number" : "Passport Number"}:</strong> {cvData.useIdNumber ? (cvData.idNumber || "Not specified") : (cvData.passportNumber || "Not specified")}
         </div>
@@ -1484,7 +1484,7 @@ const DocumentWorkspace: React.FC<{ toolId: string; onClose: () => void }> = ({ 
 
       {/* Professional Profile */}
       {cvData.professionalSummary && (
-        <div className="mt-4">
+        <div className="mt-8">
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b border-slate-400 pb-0.5 mb-1.5">PROFESSIONAL SUMMARY</h2>
           <p className="text-xs text-slate-700 text-justify leading-relaxed whitespace-pre-line">{cvData.professionalSummary}</p>
         </div>
@@ -1492,7 +1492,7 @@ const DocumentWorkspace: React.FC<{ toolId: string; onClose: () => void }> = ({ 
 
       {/* Languages List */}
       {cvData.languages.length > 0 && (
-        <div className="mt-4">
+        <div className="mt-8">
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b border-slate-400 pb-0.5 mb-1.5">LANGUAGES</h2>
           <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-700">
             {cvData.languages.map((lang, i) => (
@@ -1506,7 +1506,7 @@ const DocumentWorkspace: React.FC<{ toolId: string; onClose: () => void }> = ({ 
 
       {/* Work Experience */}
       {cvData.workExperience.length > 0 && (
-        <div className="mt-4">
+        <div className="mt-8">
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b border-slate-400 pb-0.5 mb-1.5">EMPLOYMENT HISTORY</h2>
           <div className="space-y-3.5">
             {cvData.workExperience.map((job) => (
@@ -1536,7 +1536,7 @@ const DocumentWorkspace: React.FC<{ toolId: string; onClose: () => void }> = ({ 
 
       {/* Education */}
       {cvData.education.length > 0 && (
-        <div className="mt-4">
+        <div className="mt-8">
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b border-slate-400 pb-0.5 mb-1.5">EDUCATION & QUALIFICATIONS</h2>
           <div className="space-y-2">
             {cvData.education.map((edu) => (
@@ -1554,7 +1554,7 @@ const DocumentWorkspace: React.FC<{ toolId: string; onClose: () => void }> = ({ 
 
       {/* Core Skills */}
       {cvData.skills.length > 0 && (
-        <div className="mt-4">
+        <div className="mt-8">
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b border-slate-400 pb-0.5 mb-1.5">KEY CORE COMPETENCIES</h2>
           <div className="flex flex-wrap gap-x-2 gap-y-1 text-xs text-slate-700">
             {cvData.skills.map((skill, idx) => (
@@ -1568,7 +1568,7 @@ const DocumentWorkspace: React.FC<{ toolId: string; onClose: () => void }> = ({ 
 
       {/* References */}
       {cvData.references.length > 0 && (
-        <div className="mt-4">
+        <div className="mt-8">
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b border-slate-400 pb-0.5 mb-1.5">PROFESSIONAL REFERENCES</h2>
           <div className="grid grid-cols-2 gap-4">
             {cvData.references.map((ref) => (
@@ -1608,7 +1608,7 @@ const DocumentWorkspace: React.FC<{ toolId: string; onClose: () => void }> = ({ 
           </div>
 
           {/* Client & Dates Info */}
-          <div className="mt-6 grid grid-cols-2 gap-4 border-b border-slate-200 pb-4 text-xs">
+          <div className="mt-8 grid grid-cols-2 gap-4 border-b border-slate-200 pb-4 text-xs">
             <div>
               <span className="text-slate-500 font-bold block mb-1 font-sans text-[10px]">BILLED TO:</span>
               <strong className="text-slate-800 block">{invoiceData.clientName || "Client Name"}</strong>
@@ -1623,7 +1623,7 @@ const DocumentWorkspace: React.FC<{ toolId: string; onClose: () => void }> = ({ 
           </div>
 
           {/* Items Table */}
-          <table className="w-full mt-6 text-xs text-left">
+          <table className="w-full mt-8 text-xs text-left">
             <thead>
               <tr className="border-b border-slate-300 text-slate-500 font-bold font-sans text-[10px]">
                 <th className="py-2">DESCRIPTION</th>
@@ -1645,7 +1645,7 @@ const DocumentWorkspace: React.FC<{ toolId: string; onClose: () => void }> = ({ 
           </table>
 
           {/* Totals Summary */}
-          <div className="mt-6 flex justify-end">
+          <div className="mt-8 flex justify-end">
             <div className="w-64 text-xs space-y-1.5 text-slate-700">
               <div className="flex justify-between">
                 <span>Subtotal:</span>
@@ -1694,7 +1694,7 @@ const DocumentWorkspace: React.FC<{ toolId: string; onClose: () => void }> = ({ 
         </div>
 
         {/* Date & Recipient */}
-        <div className="space-y-4 mb-6">
+        <div className="space-y-4 mb-8">
           <div>{coverLetterData.date}</div>
           <div className="leading-tight text-slate-700">
             <strong className="text-slate-900 block">{coverLetterData.recipientName}</strong>
@@ -1705,12 +1705,12 @@ const DocumentWorkspace: React.FC<{ toolId: string; onClose: () => void }> = ({ 
         </div>
 
         {/* Subject */}
-        <div className="font-bold text-slate-900 uppercase tracking-wide border-b border-slate-400 pb-1 mb-4">
+        <div className="font-bold text-slate-900 uppercase tracking-wide border-b border-slate-400 pb-1 mb-8">
           RE: APPLICATION FOR THE POSITION OF {coverLetterData.jobTitle || "POSITION"}
         </div>
 
         {/* Salutation */}
-        <div className="mb-3">Dear {coverLetterData.recipientName || "Hiring Manager"},</div>
+        <div className="mb-8">Dear {coverLetterData.recipientName || "Hiring Manager"},</div>
 
         {/* Paragraphs */}
         <div className="space-y-4 text-justify">
@@ -1721,7 +1721,7 @@ const DocumentWorkspace: React.FC<{ toolId: string; onClose: () => void }> = ({ 
       </div>
 
       {/* Sign-off */}
-      <div className="mt-12 pt-4 border-t border-slate-100">
+      <div className="mt-8 pt-4 border-t border-slate-100">
         <div>Sincerely,</div>
         <div className="font-bold text-slate-900 mt-6 text-sm">{coverLetterData.fullName}</div>
       </div>
@@ -1748,7 +1748,7 @@ const DocumentWorkspace: React.FC<{ toolId: string; onClose: () => void }> = ({ 
           </div>
 
           {/* Client & Date Info */}
-          <div className="mt-6 grid grid-cols-2 gap-4 border-b border-slate-200 pb-4 text-xs">
+          <div className="mt-8 grid grid-cols-2 gap-4 border-b border-slate-200 pb-4 text-xs">
             <div>
               <span className="text-slate-500 font-bold block mb-1 font-sans text-[10px]">QUOTED TO:</span>
               <strong className="text-slate-800 block">{quotationData.clientName || "Client Name"}</strong>
@@ -1763,7 +1763,7 @@ const DocumentWorkspace: React.FC<{ toolId: string; onClose: () => void }> = ({ 
           </div>
 
           {/* Items Table */}
-          <table className="w-full mt-6 text-xs text-left">
+          <table className="w-full mt-8 text-xs text-left">
             <thead>
               <tr className="border-b border-slate-300 text-slate-500 font-bold font-sans text-[10px]">
                 <th className="py-2">DESCRIPTION</th>
@@ -1785,7 +1785,7 @@ const DocumentWorkspace: React.FC<{ toolId: string; onClose: () => void }> = ({ 
           </table>
 
           {/* Total Block */}
-          <div className="mt-6 flex justify-end">
+          <div className="mt-8 flex justify-end">
             <div className="w-64 text-xs border-t border-slate-300 pt-2 flex justify-between text-sm font-bold text-slate-950">
               <span>ESTIMATED TOTAL:</span>
               <span>R {total.toFixed(2)}</span>
@@ -1819,29 +1819,29 @@ const DocumentWorkspace: React.FC<{ toolId: string; onClose: () => void }> = ({ 
           Hereinafter referred to individually as a "Party" and collectively as the "Parties".
         </p>
 
-        <h3 className="font-bold text-slate-950 mt-4 mb-1 uppercase font-sans text-[10px]">1. PURPOSE</h3>
+        <h3 className="font-bold text-slate-950 mt-8 mb-1 uppercase font-sans text-[10px]">1. PURPOSE</h3>
         <p className="mb-4">
           The Parties wish to disclose to each other certain confidential, proprietary, and commercial secrets for the sole purpose of: <strong className="font-serif">{ndaData.purpose || "[Purpose description]"}</strong>.
         </p>
 
-        <h3 className="font-bold text-slate-950 mt-4 mb-1 uppercase font-sans text-[10px]">2. CONFIDENTIAL INFORMATION</h3>
+        <h3 className="font-bold text-slate-950 mt-8 mb-1 uppercase font-sans text-[10px]">2. CONFIDENTIAL INFORMATION</h3>
         <p className="mb-4">
           "Confidential Information" refers to any financial, technical, software code, databases, diagrams, designs, or business operations information marked as confidential or that should reasonably be understood to be confidential under the circumstances.
         </p>
 
-        <h3 className="font-bold text-slate-950 mt-4 mb-1 uppercase font-sans text-[10px]">3. CONFIDENTIALITY PERIOD</h3>
+        <h3 className="font-bold text-slate-950 mt-8 mb-1 uppercase font-sans text-[10px]">3. CONFIDENTIALITY PERIOD</h3>
         <p className="mb-4">
           The Receiving Party agrees to hold all disclosed Confidential Information in strict secrecy and not disclose it to any third parties for a period of <strong>{ndaData.confidentialityPeriod || "3 Years"}</strong> from the Effective Date, unless written consent is provided by the Disclosing Party.
         </p>
 
-        <h3 className="font-bold text-slate-950 mt-4 mb-1 uppercase font-sans text-[10px]">4. GOVERNING LAW</h3>
+        <h3 className="font-bold text-slate-950 mt-8 mb-1 uppercase font-sans text-[10px]">4. GOVERNING LAW</h3>
         <p className="mb-4">
           This Agreement, its interpretation, and any disputes arising from it shall be governed exclusively by the laws of the <strong>{ndaData.governingLaw || "Republic of South Africa"}</strong>.
         </p>
       </div>
 
       {/* Signature blocks */}
-      <div className="mt-12 pt-6 border-t border-slate-200">
+      <div className="mt-8 pt-6 border-t border-slate-200">
         <div className="grid grid-cols-2 gap-8 text-[10px] leading-normal font-sans">
           <div>
             <div className="font-bold border-b border-slate-300 pb-1 mb-6 text-slate-900 uppercase">For Disclosing Party</div>
@@ -1990,10 +1990,15 @@ const DocumentWorkspace: React.FC<{ toolId: string; onClose: () => void }> = ({ 
             {/* The printable A4 sheet */}
             <div 
               id="document-preview-page" 
-              className="bg-white text-slate-800 p-8 shadow-2xl rounded-sm w-[100%] max-w-[700px] border border-gray-200"
-              style={{ minHeight: '297mm', fontSize: '9.5pt', lineHeight: '1.4' }}
+              className="bg-white text-slate-800 shadow-2xl rounded-sm w-[100%] max-w-[700px] border border-gray-200"
+              style={{ minHeight: '297mm', fontSize: '9.5pt', lineHeight: '1.4', padding: 0 }}
             >
-              {renderActivePreview()}
+              <div 
+                className="document-layout-container flex flex-col justify-between h-full min-h-[inherit]"
+                style={{ padding: '2.5rem 3rem', boxSizing: 'border-box' }}
+              >
+                {renderActivePreview()}
+              </div>
             </div>
           </div>
         </div>
