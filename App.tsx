@@ -2302,7 +2302,7 @@ const DocumentWorkspace: React.FC<{
   const renderCvPreview = () => (
     <>
       {/* Header */}
-      <div className="text-center pb-4 border-b-2 border-slate-800">
+      <div className="text-center pb-4 border-b border-slate-200">
         <h1 className="text-xl font-bold uppercase tracking-wide text-slate-900">{cvData.fullName || "YOUR FULL NAME"}</h1>
         <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-slate-600 mt-1.5 text-xs">
           {cvData.cellNumber && <span className="flex items-center gap-1"><Phone size={10} /> {cvData.cellNumber}</span>}
@@ -2313,7 +2313,7 @@ const DocumentWorkspace: React.FC<{
       </div>
 
       {/* Personal Details & EE Metrics */}
-      <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs text-slate-700 bg-slate-50 p-2.5 rounded border border-slate-100">
+      <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs text-slate-700 bg-slate-50 p-2.5 rounded border border-slate-100 break-inside-avoid">
         <div>
           <strong>{cvData.useIdNumber ? "National ID Number" : "Passport Number"}:</strong> {cvData.useIdNumber ? (cvData.idNumber || "Not specified") : (cvData.passportNumber || "Not specified")}
         </div>
@@ -2328,18 +2328,28 @@ const DocumentWorkspace: React.FC<{
         </div>
       </div>
 
+      <hr className="border-t border-slate-200 my-5" />
+
       {/* Professional Profile */}
       {cvData.professionalSummary && (
-        <div className="mt-8">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b border-slate-400 pb-0.5 mb-1.5">PROFESSIONAL SUMMARY</h2>
-          <p className="text-xs text-slate-700 text-justify leading-relaxed whitespace-pre-line">{cvData.professionalSummary}</p>
+        <div style={{ display: 'grid', gridTemplateColumns: '30% 70%', gap: '1.5rem' }} className="break-inside-avoid">
+          <div>
+            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900">PROFESSIONAL SUMMARY</h2>
+          </div>
+          <div className="text-xs text-slate-700 text-justify leading-relaxed whitespace-pre-line">
+            {cvData.professionalSummary}
+          </div>
         </div>
       )}
 
+      {cvData.languages.length > 0 && <hr className="border-t border-slate-200 my-5" />}
+
       {/* Languages List */}
       {cvData.languages.length > 0 && (
-        <div className="mt-8">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b border-slate-400 pb-0.5 mb-1.5">LANGUAGES</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: '30% 70%', gap: '1.5rem' }} className="break-inside-avoid">
+          <div>
+            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900">LANGUAGES</h2>
+          </div>
           <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-700">
             {cvData.languages.map((lang, i) => (
               <span key={i}>
@@ -2350,23 +2360,29 @@ const DocumentWorkspace: React.FC<{
         </div>
       )}
 
+      {cvData.workExperience.length > 0 && <hr className="border-t border-slate-200 my-5" />}
+
       {/* Work Experience */}
       {cvData.workExperience.length > 0 && (
-        <div className="mt-8">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b border-slate-400 pb-0.5 mb-1.5">EMPLOYMENT HISTORY</h2>
-          <div className="space-y-3.5">
-            {cvData.workExperience.map((job) => (
-              <div key={job.id} className="text-xs">
-                <div className="flex justify-between items-start">
-                  <h3 className="font-bold text-slate-900">{job.jobTitle || "Job Title"}</h3>
-                  <span className="font-medium text-slate-700 whitespace-nowrap">{job.startDate || "Start Date"} — {job.endDate || "End Date"}</span>
-                </div>
-                <div className="flex justify-between items-center text-slate-600 italic mb-1">
-                  <span>{job.companyName || "Company Name"}</span>
-                  <span>{job.location || "Location"}</span>
-                </div>
+        <div className="space-y-4">
+          {cvData.workExperience.map((job, idx) => (
+            <div 
+              key={job.id} 
+              style={{ display: 'grid', gridTemplateColumns: '30% 70%', gap: '1.5rem' }} 
+              className="employment-item break-inside-avoid"
+            >
+              <div>
+                {idx === 0 && (
+                  <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-2">EMPLOYMENT HISTORY</h2>
+                )}
+                <div className="text-xs font-bold text-slate-900 leading-tight">{job.companyName || "Company Name"}</div>
+                <div className="text-[10px] text-slate-500 italic mt-0.5">{job.location || "Location"}</div>
+                <div className="text-[10px] text-slate-600 font-medium mt-1">{job.startDate || "Start Date"} — {job.endDate || "End Date"}</div>
+              </div>
+              <div>
+                <h3 className="text-xs font-bold text-slate-900 mb-1.5 uppercase tracking-wide">{job.jobTitle || "Job Title"}</h3>
                 {job.responsibilities && (
-                  <ul className="list-disc pl-4 space-y-1 text-slate-700">
+                  <ul className="list-disc pl-4 space-y-1 text-xs text-slate-700">
                     {job.responsibilities.split('\n').map((line, idx) => {
                       const cleanLine = line.replace(/^[-\*\u2022]\s*/, '').trim();
                       if (!cleanLine) return null;
@@ -2375,74 +2391,91 @@ const DocumentWorkspace: React.FC<{
                   </ul>
                 )}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       )}
+
+      {cvData.education.length > 0 && <hr className="border-t border-slate-200 my-5" />}
 
       {/* Education */}
       {cvData.education.length > 0 && (
-        <div className="mt-8">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b border-slate-400 pb-0.5 mb-1.5">EDUCATION & QUALIFICATIONS</h2>
-          <div className="space-y-2">
-            {cvData.education.map((edu) => (
-              <div key={edu.id} className="text-xs">
-                <div className="flex justify-between items-baseline font-bold text-slate-900">
-                  <span>{edu.qualificationName || "Qualification Title"}</span>
-                  <span className="font-medium text-slate-700">{edu.yearCompleted || "Year Completed"}</span>
-                </div>
-                <div className="text-slate-600 italic">{edu.institution || "Institution / School"}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* Matric Subject Achievement Matrix Table */}
-          {cvData.isMatricHighest && cvData.matricSubjects && cvData.matricSubjects.length > 0 && (() => {
-            const subjects = cvData.matricSubjects || [];
-            const maxSingleCol = 7;
-            const isStacked = subjects.length > maxSingleCol;
-            
-            const col1 = isStacked ? subjects.slice(0, Math.ceil(subjects.length / 2)) : subjects;
-            const col2 = isStacked ? subjects.slice(Math.ceil(subjects.length / 2)) : [];
-
-            const renderSubjectTable = (subs: typeof subjects) => (
-              <table className="w-full text-[10px] text-left text-slate-700 leading-normal border-collapse mt-1">
-                <tbody>
-                  {subs.map((sub, sIdx) => (
-                    <tr key={sIdx} className="border-b border-slate-100">
-                      <td className="py-1.5 font-medium text-slate-800 font-sans">{sub.subjectName || "Subject"}</td>
-                      <td className="py-1.5 text-right font-sans text-slate-500 italic">
-                        {sub.score !== undefined && sub.score !== null && sub.score !== 0 ? `${sub.score}% ` : ""}{sub.level ? `(${sub.level})` : ""}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            );
-
-            return (
-              <div className="mt-4 border-t border-slate-200/50 pt-2">
-                <div className="text-[10px] font-bold text-slate-950 font-sans tracking-wide mb-1.5">
-                  MATRIC SUBJECT ACHIEVEMENT MATRIX
-                </div>
-                {isStacked ? (
-                  <div className="grid grid-cols-2 gap-x-8">
-                    <div>{renderSubjectTable(col1)}</div>
-                    <div>{renderSubjectTable(col2)}</div>
-                  </div>
-                ) : (
-                  <div className="max-w-md">{renderSubjectTable(col1)}</div>
+        <div className="space-y-4">
+          {cvData.education.map((edu, idx) => (
+            <div 
+              key={edu.id} 
+              style={{ display: 'grid', gridTemplateColumns: '30% 70%', gap: '1.5rem' }} 
+              className="education-item break-inside-avoid"
+            >
+              <div>
+                {idx === 0 && (
+                  <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-2">EDUCATION</h2>
                 )}
+                <div className="text-xs font-bold text-slate-900 leading-tight">{edu.institution || "Institution Name"}</div>
               </div>
-            );
-          })()}
+              <div>
+                <div className="education-header flex justify-between items-start w-full gap-4 mb-1">
+                  <h3 className="text-xs font-bold text-slate-900">{edu.qualificationName || "Qualification Title"}</h3>
+                  <span className="text-xs font-medium text-slate-700 whitespace-nowrap">{edu.yearCompleted ? `Completed ${edu.yearCompleted}` : ""}</span>
+                </div>
+
+                {/* Matric Subject Achievement Matrix Table */}
+                {cvData.isMatricHighest && idx === cvData.education.length - 1 && cvData.matricSubjects && cvData.matricSubjects.length > 0 && (() => {
+                  const subjects = cvData.matricSubjects || [];
+                  const maxSingleCol = 7;
+                  const isStacked = subjects.length > maxSingleCol;
+                  
+                  const col1 = isStacked ? subjects.slice(0, Math.ceil(subjects.length / 2)) : subjects;
+                  const col2 = isStacked ? subjects.slice(Math.ceil(subjects.length / 2)) : [];
+
+                  const renderSubjectTable = (subs: typeof subjects) => (
+                    <table className="w-full text-[10px] text-left text-slate-700 leading-normal border-collapse mt-1">
+                      <tbody>
+                        {subs.map((sub, sIdx) => (
+                          <tr key={sIdx} className="border-b border-slate-100">
+                            <td className="py-1.5 font-medium text-slate-800 font-sans">{sub.subjectName || "Subject"}</td>
+                            <td className="py-1.5 text-right font-sans">
+                              <span className="inline-flex items-center gap-1.5">
+                                <span className="font-bold text-slate-900">{sub.score}%</span>
+                                <span className="px-1.5 py-0.5 text-[8px] font-semibold bg-slate-100 text-slate-700 rounded">{sub.level}</span>
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  );
+
+                  return (
+                    <div className="matrix-table-wrapper break-inside-avoid mt-4 border-t border-slate-200/50 pt-2 w-full">
+                      <div className="text-[10px] font-bold text-slate-950 font-sans tracking-wide mb-1.5">
+                        MATRIC SUBJECT ACHIEVEMENT MATRIX
+                      </div>
+                      {isStacked ? (
+                        <div className="grid grid-cols-2 gap-x-8">
+                          <div>{renderSubjectTable(col1)}</div>
+                          <div>{renderSubjectTable(col2)}</div>
+                        </div>
+                      ) : (
+                        <div className="w-full">{renderSubjectTable(col1)}</div>
+                      )}
+                    </div>
+                  );
+                })()}
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
+      {cvData.skills.length > 0 && <hr className="border-t border-slate-200 my-5" />}
+
       {/* Core Skills */}
       {cvData.skills.length > 0 && (
-        <div className="mt-8">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b border-slate-400 pb-0.5 mb-1.5">KEY CORE COMPETENCIES</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: '30% 70%', gap: '1.5rem' }} className="break-inside-avoid">
+          <div>
+            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900">KEY COMPETENCIES</h2>
+          </div>
           <div className="flex flex-wrap gap-x-2 gap-y-1 text-xs text-slate-700">
             {cvData.skills.map((skill, idx) => (
               <span key={idx}>
@@ -2453,16 +2486,20 @@ const DocumentWorkspace: React.FC<{
         </div>
       )}
 
+      {cvData.references.length > 0 && <hr className="border-t border-slate-200 my-5" />}
+
       {/* References */}
       {cvData.references.length > 0 && (
-        <div className="mt-8">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b border-slate-400 pb-0.5 mb-1.5">PROFESSIONAL REFERENCES</h2>
-          <div className="grid grid-cols-2 gap-4">
+        <div className="reference-card-container break-inside-avoid w-full">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-3 w-full">PROFESSIONAL REFERENCES</h2>
+          <div className="grid grid-cols-2 gap-4 w-full">
             {cvData.references.map((ref) => (
-              <div key={ref.id} className="text-xs text-slate-700 leading-normal bg-slate-50 border border-slate-100 p-2 rounded">
-                <div className="font-bold text-slate-900">{ref.referenceName || "Reference Name"}</div>
-                <div className="text-slate-600">{ref.companyTitle || "Company Title"}</div>
-                <div className="mt-1 text-slate-500">
+              <div key={ref.id} className="text-xs text-slate-700 leading-normal bg-slate-50 border border-slate-100 p-3 rounded-xl flex flex-col justify-between h-full">
+                <div>
+                  <div className="font-bold text-slate-900 text-sm mb-0.5">{ref.referenceName || "Reference Name"}</div>
+                  <div className="text-slate-600 italic">{ref.companyTitle || "Company Title"}</div>
+                </div>
+                <div className="mt-2 pt-2 border-t border-slate-200/50 text-slate-500 space-y-0.5">
                   <div><strong>Phone:</strong> {ref.contactPhone || "Not specified"}</div>
                   <div><strong>Email:</strong> {ref.contactEmail || "Not specified"}</div>
                   <div><strong>Relation:</strong> {ref.relationship || "Not specified"}</div>
