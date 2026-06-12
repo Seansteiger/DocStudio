@@ -49,6 +49,12 @@ export interface ReferenceContact {
   relationship: string;
 }
 
+export interface MatricSubject {
+  subjectName: string;
+  score: number;
+  level: string;
+}
+
 export interface SouthAfricanCvData {
   fullName: string;
   idNumber: string;
@@ -69,6 +75,8 @@ export interface SouthAfricanCvData {
   education: EducationQualification[];
   references: ReferenceContact[];
   skills: string[];
+  isMatricHighest?: boolean;
+  matricSubjects?: MatricSubject[];
 }
 export interface InvoiceItem {
   id: string;

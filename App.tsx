@@ -552,7 +552,7 @@ const parseDocumentText = (text: string): { toolId: string; data: any } => {
 
 // Initial South African CV Mock Data
 const initialCvData: SouthAfricanCvData = {
-  fullName: "Neo Sekatane",
+  fullName: "Neo Shawn Sekatane",
   idNumber: "0305135423088",
   passportNumber: "",
   useIdNumber: true,
@@ -609,7 +609,17 @@ const initialCvData: SouthAfricanCvData = {
       relationship: "Teacher & Mentor"
     }
   ],
-  skills: ["Computer Literacy", "Software Programming", "Communication"]
+  skills: ["Computer Literacy", "Software Programming", "Communication"],
+  isMatricHighest: true,
+  matricSubjects: [
+    { subjectName: "Sepedi Home Language", score: 70, level: "Level 6" },
+    { subjectName: "English First Additional Language", score: 80, level: "Level 7" },
+    { subjectName: "Mathematics", score: 63, level: "Level 5" },
+    { subjectName: "Life Orientation", score: 77, level: "Level 6" },
+    { subjectName: "Geography", score: 69, level: "Level 5" },
+    { subjectName: "Life Sciences", score: 84, level: "Level 7" },
+    { subjectName: "Physical Sciences", score: 60, level: "Level 5" }
+  ]
 };
 
 // Initial Invoice Mock Data
@@ -709,7 +719,7 @@ const BackgroundOrbs = () => {
           scale: [1, 1.2, 1],
         }}
         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-[#00F2FF]/10 rounded-full blur-[120px]"
+        className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-[#6366F1]/10 rounded-full blur-[120px]"
       />
       <motion.div
         animate={{
@@ -726,7 +736,7 @@ const BackgroundOrbs = () => {
           y: [0, -100, 0],
         }}
         transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
-        className="absolute top-[30%] left-[40%] w-[300px] h-[300px] bg-[#00F2FF]/5 rounded-full blur-[100px]"
+        className="absolute top-[30%] left-[40%] w-[300px] h-[300px] bg-[#6366F1]/5 rounded-full blur-[100px]"
       />
     </div>
   );
@@ -739,9 +749,9 @@ const ProfilePulse = () => {
       <motion.div
         animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0, 0.5] }}
         transition={{ duration: 2, repeat: Infinity }}
-        className="absolute inset-0 bg-[#00F2FF]/40 rounded-full blur-sm"
+        className="absolute inset-0 bg-[#6366F1]/40 rounded-full blur-sm"
       />
-      <div className="relative w-12 h-12 rounded-full border-2 border-[#00F2FF] overflow-hidden p-0.5">
+      <div className="relative w-12 h-12 rounded-full border-2 border-[#6366F1] overflow-hidden p-0.5">
         <img 
           src="https://picsum.photos/seed/docstudio/200" 
           alt="Profile" 
@@ -760,7 +770,7 @@ const Hero = () => {
         <motion.h2 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-[#00F2FF] font-orbitron text-sm font-bold tracking-widest mb-1"
+          className="text-[#6366F1] font-orbitron text-sm font-bold tracking-widest mb-1"
         >
           WELCOME BACK
         </motion.h2>
@@ -784,12 +794,12 @@ const SearchBar = () => {
     <div className="px-6 mb-10">
       <div className="relative group">
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-gray-400 group-focus-within:text-[#00F2FF] transition-colors" />
+          <Search className="h-5 w-5 text-gray-400 group-focus-within:text-[#6366F1] transition-colors" />
         </div>
         <input
           type="text"
           placeholder="Search tools..."
-          className="w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#00F2FF]/50 transition-all"
+          className="w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6366F1]/50 transition-all"
         />
       </div>
     </div>
@@ -811,7 +821,7 @@ const GlassCard: React.FC<{
       className="relative cursor-pointer group"
     >
       <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-3xl -z-10" />
-      <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 h-full flex flex-col justify-between transition-all group-hover:border-[#00F2FF]/50 group-hover:shadow-[0_0_20px_rgba(0,242,255,0.2)]">
+      <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 h-full flex flex-col justify-between transition-all group-hover:border-[#6366F1]/50 group-hover:shadow-[0_0_20px_rgba(99, 102, 241, 0.2)]">
         <div className={`p-3 rounded-2xl w-fit mb-4 bg-opacity-20 flex items-center justify-center`} style={{ backgroundColor: `${service.color}20` }}>
           <div style={{ color: service.color }}>
             {service.icon}
@@ -834,45 +844,7 @@ const GlassCard: React.FC<{
   );
 };
 
-// BottomNav Component
-const BottomNav: React.FC<{ activeTab: AppRoute; setTab: (t: AppRoute) => void }> = ({ activeTab, setTab }) => {
-  const tabs = [
-    { id: AppRoute.HOME, icon: <Home size={22} />, label: 'Home' },
-    { id: AppRoute.TOOLS, icon: <Wrench size={22} />, label: 'Tools' },
-    { id: AppRoute.PROFILE, icon: <User size={22} />, label: 'Account' },
-    { id: AppRoute.SETTINGS, icon: <Settings size={22} />, label: 'Setup' },
-  ];
-
-  return (
-    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-md no-print z-40">
-      <div className="bg-[#0B0D17]/80 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-2 flex justify-around items-center shadow-2xl">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setTab(tab.id)}
-            className="relative p-4 group"
-          >
-            {activeTab === tab.id && (
-              <motion.div
-                layoutId="nav-glow"
-                className="absolute inset-0 bg-[#00F2FF]/10 rounded-2xl blur-md"
-              />
-            )}
-            <div className={`relative z-10 transition-colors duration-300 ${activeTab === tab.id ? 'text-[#00F2FF]' : 'text-gray-500 group-hover:text-white'}`}>
-              {tab.icon}
-            </div>
-            {activeTab === tab.id && (
-              <motion.div 
-                layoutId="nav-dot"
-                className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-[#00F2FF] rounded-full"
-              />
-            )}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-};
+// BottomNav removed
 
 // ExpandedTool Component
 const ExpandedTool: React.FC<{ service: ServiceCardData; onClose: () => void; onStartProject: () => void }> = ({ service, onClose, onStartProject }) => {
@@ -881,7 +853,7 @@ const ExpandedTool: React.FC<{ service: ServiceCardData; onClose: () => void; on
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex flex-col bg-[#0B0D17]"
+      className="fixed inset-0 z-50 flex flex-col bg-[#09090B]"
     >
       <div className="absolute inset-0 overflow-hidden -z-10">
         <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent" />
@@ -890,7 +862,7 @@ const ExpandedTool: React.FC<{ service: ServiceCardData; onClose: () => void; on
       <div className="px-6 pt-14 pb-6 flex items-center justify-between">
         <button 
           onClick={onClose}
-          className="p-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl text-white hover:border-[#00F2FF]/50 transition-all"
+          className="p-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl text-white hover:border-[#6366F1]/50 transition-all"
         >
           <ArrowLeft size={24} />
         </button>
@@ -910,7 +882,7 @@ const ExpandedTool: React.FC<{ service: ServiceCardData; onClose: () => void; on
               {service.icon}
             </div>
             <div>
-              <span className="text-xs text-[#00F2FF] font-orbitron font-bold tracking-widest block mb-1">ACTIVE TOOL</span>
+              <span className="text-xs text-[#6366F1] font-orbitron font-bold tracking-widest block mb-1">ACTIVE TOOL</span>
               <h3 className="text-2xl font-orbitron font-bold text-white">{service.title}</h3>
             </div>
           </div>
@@ -923,7 +895,7 @@ const ExpandedTool: React.FC<{ service: ServiceCardData; onClose: () => void; on
           <div className="grid grid-cols-2 gap-4">
             <button 
               onClick={onStartProject}
-              className="bg-[#00F2FF] text-[#0B0D17] font-bold py-4 px-6 rounded-2xl font-orbitron text-sm transition-all hover:scale-105"
+              className="bg-[#6366F1] text-[#09090B] font-bold py-4 px-6 rounded-2xl font-orbitron text-sm transition-all hover:scale-105"
             >
               NEW PROJECT
             </button>
@@ -946,7 +918,7 @@ const ExpandedTool: React.FC<{ service: ServiceCardData; onClose: () => void; on
                   <div className="text-gray-500 text-xs">Edited 2 hours ago</div>
                 </div>
               </div>
-              <div className="text-[#00F2FF] text-xs font-bold font-orbitron cursor-pointer">OPEN</div>
+              <div className="text-[#6366F1] text-xs font-bold font-orbitron cursor-pointer">OPEN</div>
             </div>
           ))}
         </div>
@@ -962,9 +934,20 @@ const DocumentWorkspace: React.FC<{
   initialData?: any;
 }> = ({ toolId, onClose, initialData }) => {
   // Document Type States
-  const [cvData, setCvData] = useState<SouthAfricanCvData>(() => 
-    toolId === '1' && initialData ? { ...initialCvData, ...initialData } : initialCvData
-  );
+  const [cvData, setCvData] = useState<SouthAfricanCvData>(() => {
+    if (toolId === '1' && initialData) {
+      const isMatric = initialData.isMatricHighest !== undefined 
+        ? initialData.isMatricHighest 
+        : (Array.isArray(initialData.matricSubjects) && initialData.matricSubjects.length > 0);
+      return { 
+        ...initialCvData, 
+        ...initialData,
+        isMatricHighest: isMatric,
+        matricSubjects: Array.isArray(initialData.matricSubjects) ? initialData.matricSubjects : []
+      };
+    }
+    return initialCvData;
+  });
   const [invoiceData, setInvoiceData] = useState<InvoiceData>(() => 
     toolId === '2' && initialData ? { ...initialInvoiceData, ...initialData } : initialInvoiceData
   );
@@ -1016,6 +999,175 @@ const DocumentWorkspace: React.FC<{
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
+  };
+
+  const [isAiPanelOpen, setIsAiPanelOpen] = useState<boolean>(false);
+  const [aiJsonInput, setAiJsonInput] = useState<string>("");
+  const [aiError, setAiError] = useState<string | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  const showToast = (message: string, type: 'success' | 'error') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  const [isPrinting, setIsPrinting] = useState<boolean>(false);
+
+  const handlePrint = () => {
+    setIsPrinting(true);
+    setTimeout(() => {
+      window.print();
+      setIsPrinting(false);
+    }, 150);
+  };
+
+  React.useEffect(() => {
+    if (initialData && window.location.search.includes('cvData')) {
+      showToast("CV Hydrated from URL link successfully!", "success");
+      
+      // Clean up URL search query without reloading
+      const url = new URL(window.location.href);
+      url.searchParams.delete('cvData');
+      window.history.replaceState({}, document.title, url.toString());
+    }
+  }, [initialData]);
+
+  const handleImportJson = (jsonText: string) => {
+    try {
+      setAiError(null);
+      if (!jsonText.trim()) {
+        setAiError("Please paste a JSON block.");
+        return;
+      }
+      const parsed = JSON.parse(jsonText);
+      
+      if (toolId === '1') {
+        if (!parsed.fullName) {
+          setAiError("Validation warning: 'fullName' is required for CV.");
+          return;
+        }
+        setCvData({
+          fullName: parsed.fullName || "",
+          idNumber: parsed.idNumber || "",
+          passportNumber: parsed.passportNumber || "",
+          useIdNumber: parsed.useIdNumber !== undefined ? parsed.useIdNumber : true,
+          gender: parsed.gender || "Male",
+          demographics: parsed.demographics || "African",
+          driversLicense: parsed.driversLicense || "None",
+          hasPdp: !!parsed.hasPdp,
+          languages: Array.isArray(parsed.languages) ? parsed.languages : [],
+          cellNumber: parsed.cellNumber || "",
+          emailAddress: parsed.emailAddress || "",
+          linkedInUrl: parsed.linkedInUrl || "",
+          currentLocation: parsed.currentLocation || "",
+          noticePeriod: parsed.noticePeriod || "Immediate",
+          professionalSummary: parsed.professionalSummary || "",
+          workExperience: Array.isArray(parsed.workExperience) ? parsed.workExperience : [],
+          education: Array.isArray(parsed.education) ? parsed.education : [],
+          skills: Array.isArray(parsed.skills) ? parsed.skills : [],
+          references: Array.isArray(parsed.references) ? parsed.references : [],
+          isMatricHighest: parsed.isMatricHighest !== undefined 
+            ? parsed.isMatricHighest 
+            : (Array.isArray(parsed.matricSubjects) && parsed.matricSubjects.length > 0),
+          matricSubjects: Array.isArray(parsed.matricSubjects) ? parsed.matricSubjects : []
+        });
+      } else if (toolId === '2') {
+        if (!parsed.invoiceNumber) {
+          setAiError("Validation warning: 'invoiceNumber' is required for Invoice.");
+          return;
+        }
+        setInvoiceData({
+          companyName: parsed.companyName || "",
+          companyEmail: parsed.companyEmail || "",
+          companyCell: parsed.companyCell || "",
+          companyAddress: parsed.companyAddress || "",
+          clientName: parsed.clientName || "",
+          clientEmail: parsed.clientEmail || "",
+          clientCell: parsed.clientCell || "",
+          clientAddress: parsed.clientAddress || "",
+          invoiceNumber: parsed.invoiceNumber || "",
+          invoiceDate: parsed.invoiceDate || "",
+          dueDate: parsed.dueDate || "",
+          items: Array.isArray(parsed.items) ? parsed.items : [],
+          taxRate: typeof parsed.taxRate === 'number' ? parsed.taxRate : 15,
+          bankName: parsed.bankName || "",
+          accountHolder: parsed.accountHolder || "",
+          accountNumber: parsed.accountNumber || "",
+          branchCode: parsed.branchCode || ""
+        });
+      } else if (toolId === '3') {
+        if (!parsed.fullName) {
+          setAiError("Validation warning: 'fullName' is required for Cover Letter.");
+          return;
+        }
+        setCoverLetterData({
+          fullName: parsed.fullName || "",
+          emailAddress: parsed.emailAddress || "",
+          cellNumber: parsed.cellNumber || "",
+          linkedInUrl: parsed.linkedInUrl || "",
+          currentLocation: parsed.currentLocation || "",
+          recipientName: parsed.recipientName || "",
+          recipientTitle: parsed.recipientTitle || "",
+          companyName: parsed.companyName || "",
+          companyAddress: parsed.companyAddress || "",
+          date: parsed.date || "",
+          jobTitle: parsed.jobTitle || "",
+          paragraphs: Array.isArray(parsed.paragraphs) ? parsed.paragraphs : []
+        });
+      } else if (toolId === '4') {
+        if (!parsed.quoteNumber) {
+          setAiError("Validation warning: 'quoteNumber' is required.");
+          return;
+        }
+        setQuotationData({
+          providerName: parsed.providerName || "",
+          providerEmail: parsed.providerEmail || "",
+          providerPhone: parsed.providerPhone || "",
+          providerAddress: parsed.providerAddress || "",
+          clientName: parsed.clientName || "",
+          clientEmail: parsed.clientEmail || "",
+          clientPhone: parsed.clientPhone || "",
+          clientAddress: parsed.clientAddress || "",
+          quoteNumber: parsed.quoteNumber || "",
+          quoteDate: parsed.quoteDate || "",
+          validUntil: parsed.validUntil || "",
+          items: Array.isArray(parsed.items) ? parsed.items : [],
+          termsAndConditions: parsed.termsAndConditions || ""
+        });
+      } else if (toolId === '5') {
+        if (!parsed.disclosingParty || !parsed.receivingParty) {
+          setAiError("Validation warning: 'disclosingParty' and 'receivingParty' are required.");
+          return;
+        }
+        setNdaData({
+          disclosingParty: parsed.disclosingParty || "",
+          receivingParty: parsed.receivingParty || "",
+          effectiveDate: parsed.effectiveDate || "",
+          purpose: parsed.purpose || "",
+          governingLaw: parsed.governingLaw || "",
+          confidentialityPeriod: parsed.confidentialityPeriod || ""
+        });
+      }
+      showToast("Data hydrated from JSON successfully!", "success");
+      setIsAiPanelOpen(false);
+    } catch (e: any) {
+      setAiError("Invalid JSON formatting. Please check your structure.");
+    }
+  };
+
+  const handleExportJson = () => {
+    let dataToExport = null;
+    if (toolId === '1') dataToExport = cvData;
+    else if (toolId === '2') dataToExport = invoiceData;
+    else if (toolId === '3') dataToExport = coverLetterData;
+    else if (toolId === '4') dataToExport = quotationData;
+    else if (toolId === '5') dataToExport = ndaData;
+    const jsonString = JSON.stringify(dataToExport, null, 2);
+    navigator.clipboard.writeText(jsonString).then(() => {
+      showToast("JSON copied to clipboard successfully!", "success");
+    }).catch(() => {
+      showToast("Clipboard blocked. Click Download instead.", "error");
+    });
   };
 
   const handleWorkspaceImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1150,7 +1302,7 @@ const DocumentWorkspace: React.FC<{
       <div className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
         <button onClick={() => toggleSection('personal')} className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#00F2FF]/10 text-[#00F2FF] rounded-xl"><User size={20} /></div>
+            <div className="p-2 bg-[#6366F1]/10 text-[#6366F1] rounded-xl"><User size={20} /></div>
             <div>
               <h3 className="font-orbitron font-bold text-white">Personal & Demographics</h3>
               <p className="text-xs text-gray-400">SA identity, gender, and EE demographics</p>
@@ -1162,27 +1314,27 @@ const DocumentWorkspace: React.FC<{
           <div className="px-6 pb-6 pt-2 border-t border-white/5 space-y-4">
             <div>
               <label className="block text-xs font-medium text-gray-300 mb-1.5">Full Name (As on ID/Passport)</label>
-              <input type="text" value={cvData.fullName} onChange={(e) => setCvData(prev => ({ ...prev, fullName: e.target.value }))} className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-[#00F2FF]/50 transition-all" />
+              <input type="text" value={cvData.fullName} onChange={(e) => setCvData(prev => ({ ...prev, fullName: e.target.value }))} className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-[#6366F1]/50 transition-all" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-medium text-gray-300 mb-1.5">Identification Document</label>
                 <div className="flex bg-white/5 p-1 rounded-2xl border border-white/10">
-                  <button type="button" onClick={() => setCvData(prev => ({ ...prev, useIdNumber: true }))} className={`flex-1 py-2 rounded-xl text-xs font-semibold font-orbitron transition-all ${cvData.useIdNumber ? 'bg-[#00F2FF] text-black' : 'text-gray-400 hover:text-white'}`}>SA ID CARD</button>
-                  <button type="button" onClick={() => setCvData(prev => ({ ...prev, useIdNumber: false }))} className={`flex-1 py-2 rounded-xl text-xs font-semibold font-orbitron transition-all ${!cvData.useIdNumber ? 'bg-[#00F2FF] text-black' : 'text-gray-400 hover:text-white'}`}>PASSPORT</button>
+                  <button type="button" onClick={() => setCvData(prev => ({ ...prev, useIdNumber: true }))} className={`flex-1 py-2 rounded-xl text-xs font-semibold font-orbitron transition-all ${cvData.useIdNumber ? 'bg-[#6366F1] text-black' : 'text-gray-400 hover:text-white'}`}>SA ID CARD</button>
+                  <button type="button" onClick={() => setCvData(prev => ({ ...prev, useIdNumber: false }))} className={`flex-1 py-2 rounded-xl text-xs font-semibold font-orbitron transition-all ${!cvData.useIdNumber ? 'bg-[#6366F1] text-black' : 'text-gray-400 hover:text-white'}`}>PASSPORT</button>
                 </div>
               </div>
               <div>
                 {cvData.useIdNumber ? (
                   <div>
                     <label className="block text-xs font-medium text-gray-300 mb-1.5">South African ID Number</label>
-                    <input type="text" maxLength={13} value={cvData.idNumber} onChange={(e) => setCvData(prev => ({ ...prev, idNumber: e.target.value }))} className={`w-full bg-white/5 border rounded-2xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-[#00F2FF]/50 transition-all ${isIdValid ? 'border-white/10' : 'border-yellow-500/50'}`} placeholder="YYMMDDSSSSCAZ" />
+                    <input type="text" maxLength={13} value={cvData.idNumber} onChange={(e) => setCvData(prev => ({ ...prev, idNumber: e.target.value }))} className={`w-full bg-white/5 border rounded-2xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-[#6366F1]/50 transition-all ${isIdValid ? 'border-white/10' : 'border-yellow-500/50'}`} placeholder="YYMMDDSSSSCAZ" />
                     {!isIdValid && <p className="text-yellow-500 text-[10px] mt-1.5 flex items-center gap-1"><AlertCircle size={12} />SA ID must be exactly 13 digits.</p>}
                   </div>
                 ) : (
                   <div>
                     <label className="block text-xs font-medium text-gray-300 mb-1.5">Passport Number</label>
-                    <input type="text" value={cvData.passportNumber} onChange={(e) => setCvData(prev => ({ ...prev, passportNumber: e.target.value }))} className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-[#00F2FF]/50 transition-all" placeholder="e.g. A01234567" />
+                    <input type="text" value={cvData.passportNumber} onChange={(e) => setCvData(prev => ({ ...prev, passportNumber: e.target.value }))} className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-[#6366F1]/50 transition-all" placeholder="e.g. A01234567" />
                   </div>
                 )}
               </div>
@@ -1190,7 +1342,7 @@ const DocumentWorkspace: React.FC<{
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-medium text-gray-300 mb-1.5">Gender (For EE Profiling)</label>
-                <select value={cvData.gender} onChange={(e) => setCvData(prev => ({ ...prev, gender: e.target.value }))} className="w-full bg-[#0B0D17] border border-white/10 rounded-2xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-[#00F2FF]/50 transition-all">
+                <select value={cvData.gender} onChange={(e) => setCvData(prev => ({ ...prev, gender: e.target.value }))} className="w-full bg-[#09090B] border border-white/10 rounded-2xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-[#6366F1]/50 transition-all">
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
                   <option value="Prefer not to say">Prefer not to say</option>
@@ -1198,7 +1350,7 @@ const DocumentWorkspace: React.FC<{
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-300 mb-1.5">Employment Equity (EE) Demographics</label>
-                <select value={cvData.demographics} onChange={(e) => setCvData(prev => ({ ...prev, demographics: e.target.value }))} className="w-full bg-[#0B0D17] border border-white/10 rounded-2xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-[#00F2FF]/50 transition-all">
+                <select value={cvData.demographics} onChange={(e) => setCvData(prev => ({ ...prev, demographics: e.target.value }))} className="w-full bg-[#09090B] border border-white/10 rounded-2xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-[#6366F1]/50 transition-all">
                   <option value="African">African</option>
                   <option value="Coloured">Coloured</option>
                   <option value="Indian">Indian</option>
@@ -1212,7 +1364,7 @@ const DocumentWorkspace: React.FC<{
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
               <div>
                 <label className="block text-xs font-medium text-gray-300 mb-1.5">Driver's License Code</label>
-                <select value={cvData.driversLicense} onChange={(e) => setCvData(prev => ({ ...prev, driversLicense: e.target.value }))} className="w-full bg-[#0B0D17] border border-white/10 rounded-2xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-[#00F2FF]/50 transition-all">
+                <select value={cvData.driversLicense} onChange={(e) => setCvData(prev => ({ ...prev, driversLicense: e.target.value }))} className="w-full bg-[#09090B] border border-white/10 rounded-2xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-[#6366F1]/50 transition-all">
                   <option value="None">None</option>
                   <option value="Code 8 / B">Code 8 / B (Light Motor Vehicle)</option>
                   <option value="Code 10 / C1">Code 10 / C1 (Heavy Motor Vehicle)</option>
@@ -1222,7 +1374,7 @@ const DocumentWorkspace: React.FC<{
               <div className="pt-5 flex items-center">
                 <label className="flex items-center gap-3 cursor-pointer select-none">
                   <input type="checkbox" checked={cvData.hasPdp} onChange={(e) => setCvData(prev => ({ ...prev, hasPdp: e.target.checked }))} className="sr-only" />
-                  <div className={`w-6 h-6 border rounded-md transition-all flex items-center justify-center ${cvData.hasPdp ? 'bg-[#00F2FF] border-[#00F2FF]' : 'border-white/20 bg-white/5'}`}>
+                  <div className={`w-6 h-6 border rounded-md transition-all flex items-center justify-center ${cvData.hasPdp ? 'bg-[#6366F1] border-[#6366F1]' : 'border-white/20 bg-white/5'}`}>
                     {cvData.hasPdp && <Check size={14} className="text-black font-extrabold" />}
                   </div>
                   <span className="text-xs font-medium text-gray-300">Has Professional Driving Permit (PrDP)</span>
@@ -1231,7 +1383,7 @@ const DocumentWorkspace: React.FC<{
             </div>
             {/* Languages Subform */}
             <div className="pt-2 border-t border-white/5">
-              <h4 className="text-xs font-semibold text-gray-300 mb-3 flex items-center gap-2"><LanguagesIcon size={14} className="text-[#00F2FF]" />Languages Spoken</h4>
+              <h4 className="text-xs font-semibold text-gray-300 mb-3 flex items-center gap-2"><LanguagesIcon size={14} className="text-[#6366F1]" />Languages Spoken</h4>
               <div className="space-y-3">
                 {cvData.languages.map((lang, index) => (
                   <div key={index} className="flex items-center justify-between bg-white/5 border border-white/5 rounded-2xl p-3">
@@ -1246,15 +1398,15 @@ const DocumentWorkspace: React.FC<{
                   </div>
                 ))}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 bg-white/5 border border-white/10 rounded-2xl p-4">
-                  <input type="text" placeholder="Language name" value={newLanguage.name} onChange={(e) => setNewLanguage(prev => ({ ...prev, name: e.target.value }))} className="w-full bg-[#0B0D17] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
-                  <select value={newLanguage.speakProficiency} onChange={(e) => setNewLanguage(prev => ({ ...prev, speakProficiency: e.target.value }))} className="w-full bg-[#0B0D17] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none">
+                  <input type="text" placeholder="Language name" value={newLanguage.name} onChange={(e) => setNewLanguage(prev => ({ ...prev, name: e.target.value }))} className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
+                  <select value={newLanguage.speakProficiency} onChange={(e) => setNewLanguage(prev => ({ ...prev, speakProficiency: e.target.value }))} className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none">
                     <option value="Basic">Basic (Speak)</option>
                     <option value="Conversational">Conversational (Speak)</option>
                     <option value="Fluent">Fluent (Speak)</option>
                     <option value="Native">Native (Speak)</option>
                   </select>
                   <div className="flex gap-2">
-                    <select value={newLanguage.writeProficiency} onChange={(e) => setNewLanguage(prev => ({ ...prev, writeProficiency: e.target.value }))} className="w-full bg-[#0B0D17] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none">
+                    <select value={newLanguage.writeProficiency} onChange={(e) => setNewLanguage(prev => ({ ...prev, writeProficiency: e.target.value }))} className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none">
                       <option value="Basic">Basic (Write)</option>
                       <option value="Intermediate">Intermediate (Write)</option>
                       <option value="Fluent">Fluent (Write)</option>
@@ -1263,7 +1415,7 @@ const DocumentWorkspace: React.FC<{
                       if (!newLanguage.name.trim()) return;
                       setCvData(prev => ({ ...prev, languages: [...prev.languages, newLanguage] }));
                       setNewLanguage({ name: "", speakProficiency: "Fluent", writeProficiency: "Fluent" });
-                    }} className="bg-[#00F2FF] text-black font-bold p-2 rounded-xl text-xs hover:bg-[#00D2DD] transition-colors"><Plus size={16} /></button>
+                    }} className="bg-[#6366F1] text-black font-bold p-2 rounded-xl text-xs hover:bg-[#00D2DD] transition-colors"><Plus size={16} /></button>
                   </div>
                 </div>
               </div>
@@ -1296,7 +1448,7 @@ const DocumentWorkspace: React.FC<{
             </div>
             <div>
               <label className="block text-xs text-gray-400 mb-1.5">Notice Period</label>
-              <select value={cvData.noticePeriod} onChange={(e) => setCvData(prev => ({ ...prev, noticePeriod: e.target.value }))} className="w-full bg-[#0B0D17] border border-white/10 rounded-2xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-[#00F2FF]/50 transition-all">
+              <select value={cvData.noticePeriod} onChange={(e) => setCvData(prev => ({ ...prev, noticePeriod: e.target.value }))} className="w-full bg-[#09090B] border border-white/10 rounded-2xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-[#6366F1]/50 transition-all">
                 <option value="Immediate">Immediate / Unemployed</option>
                 <option value="2 Weeks">2 Weeks Notice</option>
                 <option value="1 Calendar Month">1 Calendar Month</option>
@@ -1311,7 +1463,7 @@ const DocumentWorkspace: React.FC<{
       <div className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
         <button onClick={() => toggleSection('summary')} className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#F472B6]/10 text-[#F472B6] rounded-xl"><FileSignature size={20} /></div>
+            <div className="p-2 bg-[#0EA5E9]/10 text-[#0EA5E9] rounded-xl"><FileSignature size={20} /></div>
             <div>
               <h3 className="font-orbitron font-bold text-white">Professional Summary</h3>
               <p className="text-xs text-gray-400">Brief overview of your career & expertise</p>
@@ -1323,8 +1475,8 @@ const DocumentWorkspace: React.FC<{
           <div className="px-6 pb-6 pt-2 border-t border-white/5 space-y-4">
             <div className="flex justify-between items-center">
               <label className="block text-xs font-medium text-gray-300">Profile Summary</label>
-              <button type="button" onClick={handlePolishSummary} disabled={isSummaryPolishing} className="flex items-center gap-1 text-xs font-bold text-[#00F2FF] bg-[#00F2FF]/10 border border-[#00F2FF]/20 rounded-xl py-1 px-3 hover:bg-[#00F2FF]/20 transition-all disabled:opacity-50">
-                {isSummaryPolishing ? <span className="w-3 h-3 border-2 border-[#00F2FF] border-t-transparent rounded-full animate-spin"></span> : <Sparkles size={11} />}
+              <button type="button" onClick={handlePolishSummary} disabled={isSummaryPolishing} className="flex items-center gap-1 text-xs font-bold text-[#6366F1] bg-[#6366F1]/10 border border-[#6366F1]/20 rounded-xl py-1 px-3 hover:bg-[#6366F1]/20 transition-all disabled:opacity-50">
+                {isSummaryPolishing ? <span className="w-3 h-3 border-2 border-[#6366F1] border-t-transparent rounded-full animate-spin"></span> : <Sparkles size={11} />}
                 POLISH WITH AI
               </button>
             </div>
@@ -1337,7 +1489,7 @@ const DocumentWorkspace: React.FC<{
       <div className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
         <button onClick={() => toggleSection('experience')} className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#34D399]/10 text-[#34D399] rounded-xl"><Briefcase size={20} /></div>
+            <div className="p-2 bg-[#10B981]/10 text-[#10B981] rounded-xl"><Briefcase size={20} /></div>
             <div>
               <h3 className="font-orbitron font-bold text-white">Work Experience</h3>
               <p className="text-xs text-gray-400">Reverse-chronological employment history</p>
@@ -1354,27 +1506,27 @@ const DocumentWorkspace: React.FC<{
                   <button onClick={() => setCvData(prev => ({ ...prev, workExperience: prev.workExperience.filter(j => j.id !== job.id) }))} className="text-gray-500 hover:text-red-400 transition-all flex items-center gap-1 text-xs"><Trash2 size={14} /> REMOVE</button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <input type="text" value={job.jobTitle} onChange={(e) => updateJob(job.id, 'jobTitle', e.target.value)} placeholder="Job Title" className="w-full bg-[#0B0D17] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
-                  <input type="text" value={job.companyName} onChange={(e) => updateJob(job.id, 'companyName', e.target.value)} placeholder="Company Name" className="w-full bg-[#0B0D17] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
+                  <input type="text" value={job.jobTitle} onChange={(e) => updateJob(job.id, 'jobTitle', e.target.value)} placeholder="Job Title" className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
+                  <input type="text" value={job.companyName} onChange={(e) => updateJob(job.id, 'companyName', e.target.value)} placeholder="Company Name" className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <input type="text" value={job.location} onChange={(e) => updateJob(job.id, 'location', e.target.value)} placeholder="Location" className="w-full bg-[#0B0D17] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
-                  <input type="text" value={job.startDate} onChange={(e) => updateJob(job.id, 'startDate', e.target.value)} placeholder="Start Date (MM/YYYY)" className="w-full bg-[#0B0D17] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
-                  <input type="text" value={job.endDate} onChange={(e) => updateJob(job.id, 'endDate', e.target.value)} placeholder="End Date" className="w-full bg-[#0B0D17] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
+                  <input type="text" value={job.location} onChange={(e) => updateJob(job.id, 'location', e.target.value)} placeholder="Location" className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
+                  <input type="text" value={job.startDate} onChange={(e) => updateJob(job.id, 'startDate', e.target.value)} placeholder="Start Date (MM/YYYY)" className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
+                  <input type="text" value={job.endDate} onChange={(e) => updateJob(job.id, 'endDate', e.target.value)} placeholder="End Date" className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
                 </div>
                 <div>
                   <div className="flex justify-between items-center mb-1">
                     <label className="block text-[10px] font-medium text-gray-400">Responsibilities</label>
-                    <button type="button" onClick={() => handlePolishJob(job.id, job.jobTitle)} disabled={polishingJobs[job.id]} className="flex items-center gap-1 text-[10px] font-bold text-[#00F2FF] bg-[#00F2FF]/10 border border-[#00F2FF]/20 rounded-lg py-0.5 px-2 hover:bg-[#00F2FF]/20 transition-all disabled:opacity-50">
-                      {polishingJobs[job.id] ? <span className="w-2.5 h-2.5 border-2 border-[#00F2FF] border-t-transparent rounded-full animate-spin"></span> : <Sparkles size={10} />}
+                    <button type="button" onClick={() => handlePolishJob(job.id, job.jobTitle)} disabled={polishingJobs[job.id]} className="flex items-center gap-1 text-[10px] font-bold text-[#6366F1] bg-[#6366F1]/10 border border-[#6366F1]/20 rounded-lg py-0.5 px-2 hover:bg-[#6366F1]/20 transition-all disabled:opacity-50">
+                      {polishingJobs[job.id] ? <span className="w-2.5 h-2.5 border-2 border-[#6366F1] border-t-transparent rounded-full animate-spin"></span> : <Sparkles size={10} />}
                       POLISH ROLE
                     </button>
                   </div>
-                  <textarea rows={4} value={job.responsibilities} onChange={(e) => updateJob(job.id, 'responsibilities', e.target.value)} className="w-full bg-[#0B0D17] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none font-mono" placeholder="- Led development..." />
+                  <textarea rows={4} value={job.responsibilities} onChange={(e) => updateJob(job.id, 'responsibilities', e.target.value)} className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none font-mono" placeholder="- Led development..." />
                 </div>
               </div>
             ))}
-            <button onClick={addJob} className="w-full py-4 border border-dashed border-white/20 rounded-2xl text-xs font-bold text-gray-400 hover:text-[#00F2FF] hover:border-[#00F2FF]/50 transition-all flex items-center justify-center gap-2"><Plus size={16} /> ADD WORK EXPERIENCE</button>
+            <button onClick={addJob} className="w-full py-4 border border-dashed border-white/20 rounded-2xl text-xs font-bold text-gray-400 hover:text-[#6366F1] hover:border-[#6366F1]/50 transition-all flex items-center justify-center gap-2"><Plus size={16} /> ADD WORK EXPERIENCE</button>
           </div>
         )}
       </div>
@@ -1400,13 +1552,181 @@ const DocumentWorkspace: React.FC<{
                   <button onClick={() => setCvData(prev => ({ ...prev, education: prev.education.filter(e => e.id !== edu.id) }))} className="text-gray-500 hover:text-red-400 transition-all flex items-center gap-1 text-xs"><Trash2 size={14} /> REMOVE</button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <input type="text" value={edu.qualificationName} onChange={(e) => updateEducation(edu.id, 'qualificationName', e.target.value)} placeholder="Qualification Name" className="w-full bg-[#0B0D17] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none md:col-span-2" />
-                  <input type="text" value={edu.yearCompleted} onChange={(e) => updateEducation(edu.id, 'yearCompleted', e.target.value)} placeholder="Year Completed" className="w-full bg-[#0B0D17] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
+                  <input type="text" value={edu.qualificationName} onChange={(e) => updateEducation(edu.id, 'qualificationName', e.target.value)} placeholder="Qualification Name" className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none md:col-span-2" />
+                  <input type="text" value={edu.yearCompleted} onChange={(e) => updateEducation(edu.id, 'yearCompleted', e.target.value)} placeholder="Year Completed" className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
                 </div>
-                <input type="text" value={edu.institution} onChange={(e) => updateEducation(edu.id, 'institution', e.target.value)} placeholder="Institution Name" className="w-full bg-[#0B0D17] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
+                <input type="text" value={edu.institution} onChange={(e) => updateEducation(edu.id, 'institution', e.target.value)} placeholder="Institution Name" className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
               </div>
             ))}
-            <button onClick={addEducation} className="w-full py-4 border border-dashed border-white/20 rounded-2xl text-xs font-bold text-gray-400 hover:text-[#00F2FF] hover:border-[#00F2FF]/50 transition-all flex items-center justify-center gap-2"><Plus size={16} /> ADD QUALIFICATION</button>
+            <button onClick={addEducation} className="w-full py-4 border border-dashed border-white/20 rounded-2xl text-xs font-bold text-gray-400 hover:text-[#6366F1] hover:border-[#6366F1]/50 transition-all flex items-center justify-center gap-2"><Plus size={16} /> ADD QUALIFICATION</button>
+
+            {/* Matric Conditional Checkbox */}
+            <div className="border-t border-white/10 pt-4 flex items-center gap-2">
+              <input 
+                type="checkbox" 
+                id="isMatricHighest" 
+                checked={!!cvData.isMatricHighest} 
+                onChange={(e) => setCvData(prev => ({ ...prev, isMatricHighest: e.target.checked }))}
+                className="rounded border-white/20 bg-[#09090B] text-[#6366F1] focus:ring-0 focus:ring-offset-0 cursor-pointer"
+              />
+              <label htmlFor="isMatricHighest" className="text-xs text-gray-300 font-semibold cursor-pointer">
+                My highest qualification is a National Senior Certificate / Matric
+              </label>
+            </div>
+
+            {/* Matric Subject Breakdown Manager */}
+            {cvData.isMatricHighest && (
+              <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-5 space-y-4">
+                <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                  <h4 className="text-xs font-bold text-[#6366F1] uppercase font-orbitron">Matric Subject Breakdown</h4>
+                  <button 
+                    onClick={() => {
+                      const newSubject = { subjectName: "", score: 0, level: "Level 1" };
+                      setCvData(prev => ({ 
+                        ...prev, 
+                        matricSubjects: [...(prev.matricSubjects || []), newSubject] 
+                      }));
+                    }} 
+                    className="text-xs text-[#6366F1] hover:underline font-bold font-orbitron flex items-center gap-1"
+                  >
+                    <Plus size={14} /> ADD SUBJECT
+                  </button>
+                </div>
+
+                {(!cvData.matricSubjects || cvData.matricSubjects.length === 0) ? (
+                  <p className="text-xs text-gray-500 italic">No subjects added. Click 'ADD SUBJECT' to start building your breakdown.</p>
+                ) : (
+                  <div className="space-y-3">
+                    {cvData.matricSubjects.map((sub, sIdx) => {
+                      const standardSubjects = [
+                        "English Home Language",
+                        "English First Additional Language",
+                        "Mathematics",
+                        "Mathematical Literacy",
+                        "Physical Sciences",
+                        "Life Sciences",
+                        "Accounting",
+                        "Business Studies",
+                        "Geography",
+                        "History",
+                        "Computer Applications Technology (CAT)",
+                        "Information Technology (IT)",
+                        "Life Orientation"
+                      ];
+                      
+                      const isCustom = !standardSubjects.includes(sub.subjectName) && sub.subjectName !== "";
+
+                      return (
+                        <div key={sIdx} className="grid grid-cols-1 md:grid-cols-12 gap-3 p-3 bg-[#09090B]/50 border border-white/5 rounded-xl items-center relative">
+                          
+                          {/* Subject Name Select */}
+                          <div className="col-span-1 md:col-span-5">
+                            <select
+                              value={standardSubjects.includes(sub.subjectName) ? sub.subjectName : (sub.subjectName === "" ? "" : "Other")}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                const updated = [...(cvData.matricSubjects || [])];
+                                if (val === "Other") {
+                                  updated[sIdx] = { ...updated[sIdx], subjectName: "" };
+                                } else {
+                                  updated[sIdx] = { ...updated[sIdx], subjectName: val };
+                                }
+                                setCvData(prev => ({ ...prev, matricSubjects: updated }));
+                              }}
+                              className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none"
+                            >
+                              <option value="">Select Subject...</option>
+                              {standardSubjects.map((opt) => (
+                                <option key={opt} value={opt}>{opt}</option>
+                              ))}
+                              <option value="Other">Other...</option>
+                            </select>
+
+                            {/* Custom Subject Name Input */}
+                            {(isCustom || sub.subjectName === "") && (
+                              <input
+                                type="text"
+                                value={sub.subjectName}
+                                onChange={(e) => {
+                                  const updated = [...(cvData.matricSubjects || [])];
+                                  updated[sIdx] = { ...updated[sIdx], subjectName: e.target.value };
+                                  setCvData(prev => ({ ...prev, matricSubjects: updated }));
+                                }}
+                                placeholder="Enter custom subject name..."
+                                className="w-full mt-2 bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none font-sans"
+                              />
+                            )}
+                          </div>
+
+                          {/* Percentage Input */}
+                          <div className="col-span-1 md:col-span-3">
+                            <input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={sub.score || ""}
+                              onChange={(e) => {
+                                const val = parseInt(e.target.value) || 0;
+                                let level = "Level 1";
+                                if (val >= 80) level = "Level 7";
+                                else if (val >= 70) level = "Level 6";
+                                else if (val >= 60) level = "Level 5";
+                                else if (val >= 50) level = "Level 4";
+                                else if (val >= 40) level = "Level 3";
+                                else if (val >= 30) level = "Level 2";
+                                else level = "Level 1";
+
+                                const updated = [...(cvData.matricSubjects || [])];
+                                updated[sIdx] = { ...updated[sIdx], score: val, level };
+                                setCvData(prev => ({ ...prev, matricSubjects: updated }));
+                              }}
+                              placeholder="Score (%)"
+                              className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none font-sans"
+                            />
+                          </div>
+
+                          {/* NSC Level Select */}
+                          <div className="col-span-1 md:col-span-3">
+                            <select
+                              value={sub.level || "Level 1"}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                const updated = [...(cvData.matricSubjects || [])];
+                                updated[sIdx] = { ...updated[sIdx], level: val };
+                                setCvData(prev => ({ ...prev, matricSubjects: updated }));
+                              }}
+                              className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none"
+                            >
+                              <option value="Level 7">Level 7 (80-100%)</option>
+                              <option value="Level 6">Level 6 (70-79%)</option>
+                              <option value="Level 5">Level 5 (60-69%)</option>
+                              <option value="Level 4">Level 4 (50-59%)</option>
+                              <option value="Level 3">Level 3 (40-49%)</option>
+                              <option value="Level 2">Level 2 (30-39%)</option>
+                              <option value="Level 1">Level 1 (0-29%)</option>
+                            </select>
+                          </div>
+
+                          {/* Delete Button */}
+                          <div className="col-span-1 md:col-span-1 flex justify-center">
+                            <button
+                              onClick={() => {
+                                const updated = (cvData.matricSubjects || []).filter((_, i) => i !== sIdx);
+                                setCvData(prev => ({ ...prev, matricSubjects: updated }));
+                              }}
+                              className="text-gray-500 hover:text-red-400 p-1 rounded-lg hover:bg-white/5 transition-all"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -1415,7 +1735,7 @@ const DocumentWorkspace: React.FC<{
       <div className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
         <button onClick={() => toggleSection('skills')} className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#F472B6]/10 text-[#F472B6] rounded-xl"><Layers size={20} /></div>
+            <div className="p-2 bg-[#0EA5E9]/10 text-[#0EA5E9] rounded-xl"><Layers size={20} /></div>
             <div>
               <h3 className="font-orbitron font-bold text-white">Skills & Job Category</h3>
               <p className="text-xs text-gray-400">Add industry skills and get recommendations</p>
@@ -1427,18 +1747,18 @@ const DocumentWorkspace: React.FC<{
           <div className="px-6 pb-6 pt-2 border-t border-white/5 space-y-4">
             <div className="flex flex-wrap gap-2 min-h-[40px] bg-white/5 p-3 rounded-2xl border border-white/5">
               {cvData.skills.length === 0 ? <span className="text-xs text-gray-500 italic">No skills added yet.</span> : cvData.skills.map((skill, idx) => (
-                <div key={idx} className="flex items-center gap-1.5 bg-[#00F2FF]/10 text-[#00F2FF] border border-[#00F2FF]/20 rounded-full px-3 py-1 text-xs">
+                <div key={idx} className="flex items-center gap-1.5 bg-[#6366F1]/10 text-[#6366F1] border border-[#6366F1]/20 rounded-full px-3 py-1 text-xs">
                   {skill}
-                  <button type="button" onClick={() => removeSkill(skill)} className="text-[#00F2FF] hover:text-white transition-colors text-sm font-bold">&times;</button>
+                  <button type="button" onClick={() => removeSkill(skill)} className="text-[#6366F1] hover:text-white transition-colors text-sm font-bold">&times;</button>
                 </div>
               ))}
             </div>
             <div className="flex gap-2">
               <input type="text" placeholder="Type a skill..." value={newSkill} onChange={(e) => setNewSkill(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleAddSkill()} className="flex-1 bg-white/5 border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
-              <button onClick={handleAddSkill} className="bg-[#00F2FF] text-black font-bold px-4 rounded-xl text-xs hover:bg-[#00D2DD]">ADD</button>
+              <button onClick={handleAddSkill} className="bg-[#6366F1] text-black font-bold px-4 rounded-xl text-xs hover:bg-[#00D2DD]">ADD</button>
             </div>
             <div className="pt-2 border-t border-white/5 space-y-3">
-              <select value={jobCategory} onChange={(e) => setJobCategory(e.target.value)} className="w-full bg-[#0B0D17] border border-white/10 rounded-2xl py-3 px-4 text-white text-xs">
+              <select value={jobCategory} onChange={(e) => setJobCategory(e.target.value)} className="w-full bg-[#09090B] border border-white/10 rounded-2xl py-3 px-4 text-white text-xs">
                 <option value="Web Development">Web Development</option>
                 <option value="Business Analysis">Business Analysis</option>
                 <option value="Administration">Administration</option>
@@ -1449,7 +1769,7 @@ const DocumentWorkspace: React.FC<{
                 {suggestedSkillsMap[jobCategory]?.map((skill) => {
                   const isAdded = cvData.skills.includes(skill);
                   return (
-                    <button key={skill} type="button" onClick={() => addSuggestedSkill(skill)} disabled={isAdded} className={`text-[10px] rounded-lg px-2 py-1 font-medium border transition-all ${isAdded ? 'bg-white/5 border-white/5 text-gray-600' : 'bg-white/5 border-white/10 text-gray-300 hover:border-[#00F2FF] hover:text-[#00F2FF]'}`}>+ {skill}</button>
+                    <button key={skill} type="button" onClick={() => addSuggestedSkill(skill)} disabled={isAdded} className={`text-[10px] rounded-lg px-2 py-1 font-medium border transition-all ${isAdded ? 'bg-white/5 border-white/5 text-gray-600' : 'bg-white/5 border-white/10 text-gray-300 hover:border-[#6366F1] hover:text-[#6366F1]'}`}>+ {skill}</button>
                   );
                 })}
               </div>
@@ -1462,7 +1782,7 @@ const DocumentWorkspace: React.FC<{
       <div className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
         <button onClick={() => toggleSection('references')} className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#34D399]/10 text-[#34D399] rounded-xl"><UserCheck size={20} /></div>
+            <div className="p-2 bg-[#10B981]/10 text-[#10B981] rounded-xl"><UserCheck size={20} /></div>
             <div>
               <h3 className="font-orbitron font-bold text-white">Professional References</h3>
               <p className="text-xs text-gray-400">Min. 2 references required for SA compliance</p>
@@ -1485,17 +1805,17 @@ const DocumentWorkspace: React.FC<{
                   <button onClick={() => setCvData(prev => ({ ...prev, references: prev.references.filter(r => r.id !== ref.id) }))} className="text-gray-500 hover:text-red-400 transition-all flex items-center gap-1 text-xs"><Trash2 size={14} /> REMOVE</button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <input type="text" value={ref.referenceName} onChange={(e) => updateReference(ref.id, 'referenceName', e.target.value)} placeholder="Full Name" className="w-full bg-[#0B0D17] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
-                  <input type="text" value={ref.companyTitle} onChange={(e) => updateReference(ref.id, 'companyTitle', e.target.value)} placeholder="Company & Title" className="w-full bg-[#0B0D17] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
+                  <input type="text" value={ref.referenceName} onChange={(e) => updateReference(ref.id, 'referenceName', e.target.value)} placeholder="Full Name" className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
+                  <input type="text" value={ref.companyTitle} onChange={(e) => updateReference(ref.id, 'companyTitle', e.target.value)} placeholder="Company & Title" className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <input type="text" value={ref.relationship} onChange={(e) => updateReference(ref.id, 'relationship', e.target.value)} placeholder="Relationship" className="w-full bg-[#0B0D17] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
-                  <input type="email" value={ref.contactEmail} onChange={(e) => updateReference(ref.id, 'contactEmail', e.target.value)} placeholder="Email" className="w-full bg-[#0B0D17] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
-                  <input type="text" value={ref.contactPhone} onChange={(e) => updateReference(ref.id, 'contactPhone', e.target.value)} placeholder="Phone" className="w-full bg-[#0B0D17] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
+                  <input type="text" value={ref.relationship} onChange={(e) => updateReference(ref.id, 'relationship', e.target.value)} placeholder="Relationship" className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
+                  <input type="email" value={ref.contactEmail} onChange={(e) => updateReference(ref.id, 'contactEmail', e.target.value)} placeholder="Email" className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
+                  <input type="text" value={ref.contactPhone} onChange={(e) => updateReference(ref.id, 'contactPhone', e.target.value)} placeholder="Phone" className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
                 </div>
               </div>
             ))}
-            <button onClick={addReference} className="w-full py-4 border border-dashed border-white/20 rounded-2xl text-xs font-bold text-gray-400 hover:text-[#00F2FF] hover:border-[#00F2FF]/50 transition-all flex items-center justify-center gap-2"><Plus size={16} /> ADD REFERENCE</button>
+            <button onClick={addReference} className="w-full py-4 border border-dashed border-white/20 rounded-2xl text-xs font-bold text-gray-400 hover:text-[#6366F1] hover:border-[#6366F1]/50 transition-all flex items-center justify-center gap-2"><Plus size={16} /> ADD REFERENCE</button>
           </div>
         )}
       </div>
@@ -1519,7 +1839,7 @@ const DocumentWorkspace: React.FC<{
         {expandedSections.invoiceSender && (
           <div className="px-6 pb-6 pt-2 border-t border-white/5 space-y-4">
             <div className="border-b border-white/5 pb-4 space-y-3">
-              <span className="block text-[10px] font-bold text-[#00F2FF] uppercase font-orbitron">YOUR DETAILS (SENDER)</span>
+              <span className="block text-[10px] font-bold text-[#6366F1] uppercase font-orbitron">YOUR DETAILS (SENDER)</span>
               <input type="text" value={invoiceData.companyName} onChange={(e) => setInvoiceData(prev => ({ ...prev, companyName: e.target.value }))} placeholder="Your Company/Trading Name" className="w-full bg-white/5 border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
               <div className="grid grid-cols-2 gap-3">
                 <input type="text" value={invoiceData.companyEmail} onChange={(e) => setInvoiceData(prev => ({ ...prev, companyEmail: e.target.value }))} placeholder="Billing Email" className="w-full bg-white/5 border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
@@ -1545,7 +1865,7 @@ const DocumentWorkspace: React.FC<{
       <div className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
         <button onClick={() => toggleSection('invoiceInfo')} className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#F472B6]/10 text-[#F472B6] rounded-xl"><CalendarDays size={20} /></div>
+            <div className="p-2 bg-[#0EA5E9]/10 text-[#0EA5E9] rounded-xl"><CalendarDays size={20} /></div>
             <div>
               <h3 className="font-orbitron font-bold text-white">Invoice Information</h3>
               <p className="text-xs text-gray-400">Invoice number, creation, and due dates</p>
@@ -1577,7 +1897,7 @@ const DocumentWorkspace: React.FC<{
       <div className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
         <button onClick={() => toggleSection('invoiceItems')} className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#34D399]/10 text-[#34D399] rounded-xl"><Layers size={20} /></div>
+            <div className="p-2 bg-[#10B981]/10 text-[#10B981] rounded-xl"><Layers size={20} /></div>
             <div>
               <h3 className="font-orbitron font-bold text-white">Services & Items</h3>
               <p className="text-xs text-gray-400">Add deliverables, quantities, and rates</p>
@@ -1593,15 +1913,15 @@ const DocumentWorkspace: React.FC<{
                   <input type="text" value={item.description} onChange={(e) => setInvoiceData(prev => ({
                     ...prev,
                     items: prev.items.map(i => i.id === item.id ? { ...i, description: e.target.value } : i)
-                  }))} placeholder="Item description" className="flex-1 bg-[#0B0D17] border border-white/10 rounded-lg py-1.5 px-3 text-xs text-white focus:outline-none" />
+                  }))} placeholder="Item description" className="flex-1 bg-[#09090B] border border-white/10 rounded-lg py-1.5 px-3 text-xs text-white focus:outline-none" />
                   <input type="number" value={item.quantity} onChange={(e) => setInvoiceData(prev => ({
                     ...prev,
                     items: prev.items.map(i => i.id === item.id ? { ...i, quantity: Math.max(1, parseInt(e.target.value) || 0) } : i)
-                  }))} placeholder="Qty" className="w-16 bg-[#0B0D17] border border-white/10 rounded-lg py-1.5 px-2 text-xs text-white focus:outline-none" />
+                  }))} placeholder="Qty" className="w-16 bg-[#09090B] border border-white/10 rounded-lg py-1.5 px-2 text-xs text-white focus:outline-none" />
                   <input type="number" value={item.rate} onChange={(e) => setInvoiceData(prev => ({
                     ...prev,
                     items: prev.items.map(i => i.id === item.id ? { ...i, rate: Math.max(0, parseFloat(e.target.value) || 0) } : i)
-                  }))} placeholder="Rate" className="w-24 bg-[#0B0D17] border border-white/10 rounded-lg py-1.5 px-2 text-xs text-white focus:outline-none" />
+                  }))} placeholder="Rate" className="w-24 bg-[#09090B] border border-white/10 rounded-lg py-1.5 px-2 text-xs text-white focus:outline-none" />
                   <button onClick={() => setInvoiceData(prev => ({
                     ...prev,
                     items: prev.items.filter(i => i.id !== item.id)
@@ -1611,12 +1931,12 @@ const DocumentWorkspace: React.FC<{
               <button onClick={() => setInvoiceData(prev => ({
                 ...prev,
                 items: [...prev.items, { id: Date.now().toString(), description: "", quantity: 1, rate: 0 }]
-              }))} className="w-full py-2 border border-dashed border-white/10 rounded-xl text-[10px] font-bold text-gray-400 hover:text-[#00F2FF] hover:border-[#00F2FF]/30 transition-all flex items-center justify-center gap-1.5"><Plus size={12} /> ADD LINE ITEM</button>
+              }))} className="w-full py-2 border border-dashed border-white/10 rounded-xl text-[10px] font-bold text-gray-400 hover:text-[#6366F1] hover:border-[#6366F1]/30 transition-all flex items-center justify-center gap-1.5"><Plus size={12} /> ADD LINE ITEM</button>
             </div>
             
             <div className="pt-2 border-t border-white/5">
               <label className="block text-[10px] text-gray-400 mb-1">South African VAT Rate (%)</label>
-              <select value={invoiceData.taxRate} onChange={(e) => setInvoiceData(prev => ({ ...prev, taxRate: parseInt(e.target.value) }))} className="w-full bg-[#0B0D17] border border-white/10 rounded-2xl py-3 px-4 text-white text-xs">
+              <select value={invoiceData.taxRate} onChange={(e) => setInvoiceData(prev => ({ ...prev, taxRate: parseInt(e.target.value) }))} className="w-full bg-[#09090B] border border-white/10 rounded-2xl py-3 px-4 text-white text-xs">
                 <option value="15">15% Standard VAT</option>
                 <option value="0">0% VAT Exempt</option>
               </select>
@@ -1629,7 +1949,7 @@ const DocumentWorkspace: React.FC<{
       <div className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
         <button onClick={() => toggleSection('invoiceBank')} className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#34D399]/10 text-[#34D399] rounded-xl"><CreditCard size={20} /></div>
+            <div className="p-2 bg-[#10B981]/10 text-[#10B981] rounded-xl"><CreditCard size={20} /></div>
             <div>
               <h3 className="font-orbitron font-bold text-white">Banking Details</h3>
               <p className="text-xs text-gray-400">Payment settlement information</p>
@@ -1659,7 +1979,7 @@ const DocumentWorkspace: React.FC<{
       <div className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
         <button onClick={() => toggleSection('letterSender')} className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#00F2FF]/10 text-[#00F2FF] rounded-xl"><User size={20} /></div>
+            <div className="p-2 bg-[#6366F1]/10 text-[#6366F1] rounded-xl"><User size={20} /></div>
             <div>
               <h3 className="font-orbitron font-bold text-white">Your Profile Contact</h3>
               <p className="text-xs text-gray-400">Your email, cell, and LinkedIn info</p>
@@ -1713,7 +2033,7 @@ const DocumentWorkspace: React.FC<{
       <div className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
         <button onClick={() => toggleSection('letterSubject')} className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#F472B6]/10 text-[#F472B6] rounded-xl"><FileTextIcon size={20} /></div>
+            <div className="p-2 bg-[#0EA5E9]/10 text-[#0EA5E9] rounded-xl"><FileTextIcon size={20} /></div>
             <div>
               <h3 className="font-orbitron font-bold text-white">Target Position</h3>
               <p className="text-xs text-gray-400">Position applied for</p>
@@ -1732,7 +2052,7 @@ const DocumentWorkspace: React.FC<{
       <div className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
         <button onClick={() => toggleSection('letterBody')} className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#34D399]/10 text-[#34D399] rounded-xl"><FileSignature size={20} /></div>
+            <div className="p-2 bg-[#10B981]/10 text-[#10B981] rounded-xl"><FileSignature size={20} /></div>
             <div>
               <h3 className="font-orbitron font-bold text-white">Letter Content</h3>
               <p className="text-xs text-gray-400">Write or AI-compose the letter paragraphs</p>
@@ -1744,8 +2064,8 @@ const DocumentWorkspace: React.FC<{
           <div className="px-6 pb-6 pt-2 border-t border-white/5 space-y-4">
             <div className="flex justify-between items-center">
               <span className="text-xs text-gray-400 font-medium">Compose Paragraphs</span>
-              <button type="button" onClick={handlePolishCoverLetter} disabled={isLetterPolishing} className="flex items-center gap-1.5 text-xs font-bold text-[#00F2FF] bg-[#00F2FF]/10 border border-[#00F2FF]/20 rounded-xl py-1.5 px-3 hover:bg-[#00F2FF]/20 transition-all disabled:opacity-50">
-                {isLetterPolishing ? <span className="w-3 h-3 border-2 border-[#00F2FF] border-t-transparent rounded-full animate-spin"></span> : <Sparkles size={12} />}
+              <button type="button" onClick={handlePolishCoverLetter} disabled={isLetterPolishing} className="flex items-center gap-1.5 text-xs font-bold text-[#6366F1] bg-[#6366F1]/10 border border-[#6366F1]/20 rounded-xl py-1.5 px-3 hover:bg-[#6366F1]/20 transition-all disabled:opacity-50">
+                {isLetterPolishing ? <span className="w-3 h-3 border-2 border-[#6366F1] border-t-transparent rounded-full animate-spin"></span> : <Sparkles size={12} />}
                 COMPOSE WITH AI
               </button>
             </div>
@@ -1756,7 +2076,7 @@ const DocumentWorkspace: React.FC<{
                   const updated = [...coverLetterData.paragraphs];
                   updated[idx] = e.target.value;
                   setCoverLetterData(prev => ({ ...prev, paragraphs: updated }));
-                }} className="w-full bg-[#0B0D17] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none leading-relaxed" />
+                }} className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none leading-relaxed" />
               </div>
             ))}
           </div>
@@ -1782,7 +2102,7 @@ const DocumentWorkspace: React.FC<{
         {expandedSections.invoiceSender && (
           <div className="px-6 pb-6 pt-2 border-t border-white/5 space-y-4">
             <div className="border-b border-white/5 pb-4 space-y-3">
-              <span className="block text-[10px] font-bold text-[#00F2FF] uppercase font-orbitron">SERVICE PROVIDER</span>
+              <span className="block text-[10px] font-bold text-[#6366F1] uppercase font-orbitron">SERVICE PROVIDER</span>
               <input type="text" value={quotationData.providerName} onChange={(e) => setQuotationData(prev => ({ ...prev, providerName: e.target.value }))} placeholder="Your Business/Trading Name" className="w-full bg-white/5 border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
               <div className="grid grid-cols-2 gap-3">
                 <input type="text" value={quotationData.providerEmail} onChange={(e) => setQuotationData(prev => ({ ...prev, providerEmail: e.target.value }))} placeholder="Email Address" className="w-full bg-white/5 border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
@@ -1808,7 +2128,7 @@ const DocumentWorkspace: React.FC<{
       <div className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
         <button onClick={() => toggleSection('invoiceInfo')} className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#F472B6]/10 text-[#F472B6] rounded-xl"><CalendarDays size={20} /></div>
+            <div className="p-2 bg-[#0EA5E9]/10 text-[#0EA5E9] rounded-xl"><CalendarDays size={20} /></div>
             <div>
               <h3 className="font-orbitron font-bold text-white">Quotation Info</h3>
               <p className="text-xs text-gray-400">Quote number, dates, and validity</p>
@@ -1840,7 +2160,7 @@ const DocumentWorkspace: React.FC<{
       <div className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
         <button onClick={() => toggleSection('invoiceItems')} className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#34D399]/10 text-[#34D399] rounded-xl"><Layers size={20} /></div>
+            <div className="p-2 bg-[#10B981]/10 text-[#10B981] rounded-xl"><Layers size={20} /></div>
             <div>
               <h3 className="font-orbitron font-bold text-white">Itemized Quotation</h3>
               <p className="text-xs text-gray-400">List deliverables and rates</p>
@@ -1856,15 +2176,15 @@ const DocumentWorkspace: React.FC<{
                   <input type="text" value={item.description} onChange={(e) => setQuotationData(prev => ({
                     ...prev,
                     items: prev.items.map(i => i.id === item.id ? { ...i, description: e.target.value } : i)
-                  }))} placeholder="Deliverable description" className="flex-1 bg-[#0B0D17] border border-white/10 rounded-lg py-1.5 px-3 text-xs text-white focus:outline-none" />
+                  }))} placeholder="Deliverable description" className="flex-1 bg-[#09090B] border border-white/10 rounded-lg py-1.5 px-3 text-xs text-white focus:outline-none" />
                   <input type="number" value={item.quantity} onChange={(e) => setQuotationData(prev => ({
                     ...prev,
                     items: prev.items.map(i => i.id === item.id ? { ...i, quantity: Math.max(1, parseInt(e.target.value) || 0) } : i)
-                  }))} placeholder="Qty" className="w-16 bg-[#0B0D17] border border-white/10 rounded-lg py-1.5 px-2 text-xs text-white focus:outline-none" />
+                  }))} placeholder="Qty" className="w-16 bg-[#09090B] border border-white/10 rounded-lg py-1.5 px-2 text-xs text-white focus:outline-none" />
                   <input type="number" value={item.rate} onChange={(e) => setQuotationData(prev => ({
                     ...prev,
                     items: prev.items.map(i => i.id === item.id ? { ...i, rate: Math.max(0, parseFloat(e.target.value) || 0) } : i)
-                  }))} placeholder="Rate" className="w-24 bg-[#0B0D17] border border-white/10 rounded-lg py-1.5 px-2 text-xs text-white focus:outline-none" />
+                  }))} placeholder="Rate" className="w-24 bg-[#09090B] border border-white/10 rounded-lg py-1.5 px-2 text-xs text-white focus:outline-none" />
                   <button onClick={() => setQuotationData(prev => ({
                     ...prev,
                     items: prev.items.filter(i => i.id !== item.id)
@@ -1874,7 +2194,7 @@ const DocumentWorkspace: React.FC<{
               <button onClick={() => setQuotationData(prev => ({
                 ...prev,
                 items: [...prev.items, { id: Date.now().toString(), description: "", quantity: 1, rate: 0 }]
-              }))} className="w-full py-2 border border-dashed border-white/10 rounded-xl text-[10px] font-bold text-gray-400 hover:text-[#00F2FF] hover:border-[#00F2FF]/30 transition-all flex items-center justify-center gap-1.5"><Plus size={12} /> ADD QUOTE ITEM</button>
+              }))} className="w-full py-2 border border-dashed border-white/10 rounded-xl text-[10px] font-bold text-gray-400 hover:text-[#6366F1] hover:border-[#6366F1]/30 transition-all flex items-center justify-center gap-1.5"><Plus size={12} /> ADD QUOTE ITEM</button>
             </div>
           </div>
         )}
@@ -1884,7 +2204,7 @@ const DocumentWorkspace: React.FC<{
       <div className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
         <button onClick={() => toggleSection('invoiceBank')} className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#34D399]/10 text-[#34D399] rounded-xl"><FileSignature size={20} /></div>
+            <div className="p-2 bg-[#10B981]/10 text-[#10B981] rounded-xl"><FileSignature size={20} /></div>
             <div>
               <h3 className="font-orbitron font-bold text-white">Terms & Conditions</h3>
               <p className="text-xs text-gray-400">Payment terms and service rules</p>
@@ -1894,7 +2214,7 @@ const DocumentWorkspace: React.FC<{
         </button>
         {expandedSections.invoiceBank && (
           <div className="px-6 pb-6 pt-2 border-t border-white/5">
-            <textarea rows={4} value={quotationData.termsAndConditions} onChange={(e) => setQuotationData(prev => ({ ...prev, termsAndConditions: e.target.value }))} className="w-full bg-[#0B0D17] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
+            <textarea rows={4} value={quotationData.termsAndConditions} onChange={(e) => setQuotationData(prev => ({ ...prev, termsAndConditions: e.target.value }))} className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
           </div>
         )}
       </div>
@@ -1933,7 +2253,7 @@ const DocumentWorkspace: React.FC<{
       <div className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
         <button onClick={() => toggleSection('ndaTerms')} className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#34D399]/10 text-[#34D399] rounded-xl"><Clock size={20} /></div>
+            <div className="p-2 bg-[#10B981]/10 text-[#10B981] rounded-xl"><Clock size={20} /></div>
             <div>
               <h3 className="font-orbitron font-bold text-white">Agreement Scope</h3>
               <p className="text-xs text-gray-400">Start dates, purpose, and governing laws</p>
@@ -1946,11 +2266,11 @@ const DocumentWorkspace: React.FC<{
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-[10px] text-gray-400 mb-1">Effective Date</label>
-                <input type="text" value={ndaData.effectiveDate} onChange={(e) => setNdaData(prev => ({ ...prev, effectiveDate: e.target.value }))} className="w-full bg-[#0B0D17] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
+                <input type="text" value={ndaData.effectiveDate} onChange={(e) => setNdaData(prev => ({ ...prev, effectiveDate: e.target.value }))} className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
               </div>
               <div>
                 <label className="block text-[10px] text-gray-400 mb-1">Confidentiality Term</label>
-                <input type="text" value={ndaData.confidentialityPeriod} onChange={(e) => setNdaData(prev => ({ ...prev, confidentialityPeriod: e.target.value }))} className="w-full bg-[#0B0D17] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
+                <input type="text" value={ndaData.confidentialityPeriod} onChange={(e) => setNdaData(prev => ({ ...prev, confidentialityPeriod: e.target.value }))} className="w-full bg-[#09090B] border border-white/10 rounded-xl py-2 px-3 text-xs text-white focus:outline-none" />
               </div>
             </div>
             <div>
@@ -2075,6 +2395,47 @@ const DocumentWorkspace: React.FC<{
               </div>
             ))}
           </div>
+
+          {/* Matric Subject Achievement Matrix Table */}
+          {cvData.isMatricHighest && cvData.matricSubjects && cvData.matricSubjects.length > 0 && (() => {
+            const subjects = cvData.matricSubjects || [];
+            const maxSingleCol = 7;
+            const isStacked = subjects.length > maxSingleCol;
+            
+            const col1 = isStacked ? subjects.slice(0, Math.ceil(subjects.length / 2)) : subjects;
+            const col2 = isStacked ? subjects.slice(Math.ceil(subjects.length / 2)) : [];
+
+            const renderSubjectTable = (subs: typeof subjects) => (
+              <table className="w-full text-[10px] text-left text-slate-700 leading-normal border-collapse mt-1">
+                <tbody>
+                  {subs.map((sub, sIdx) => (
+                    <tr key={sIdx} className="border-b border-slate-100">
+                      <td className="py-1.5 font-medium text-slate-800 font-sans">{sub.subjectName || "Subject"}</td>
+                      <td className="py-1.5 text-right font-sans text-slate-500 italic">
+                        {sub.score !== undefined && sub.score !== null && sub.score !== 0 ? `${sub.score}% ` : ""}{sub.level ? `(${sub.level})` : ""}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            );
+
+            return (
+              <div className="mt-4 border-t border-slate-200/50 pt-2">
+                <div className="text-[10px] font-bold text-slate-950 font-sans tracking-wide mb-1.5">
+                  MATRIC SUBJECT ACHIEVEMENT MATRIX
+                </div>
+                {isStacked ? (
+                  <div className="grid grid-cols-2 gap-x-8">
+                    <div>{renderSubjectTable(col1)}</div>
+                    <div>{renderSubjectTable(col2)}</div>
+                  </div>
+                ) : (
+                  <div className="max-w-md">{renderSubjectTable(col1)}</div>
+                )}
+              </div>
+            );
+          })()}
         </div>
       )}
 
@@ -2478,16 +2839,16 @@ const DocumentWorkspace: React.FC<{
   };
 
   return (
-    <div id="cv-builder-workspace" className="min-h-screen bg-[#0B0D17] text-white flex flex-col">
+    <div id="cv-builder-workspace" className="min-h-screen bg-[#09090B] text-white flex flex-col">
       {/* Top Action Bar */}
       <header className="no-print bg-white/5 border-b border-white/10 px-6 py-4 flex items-center justify-between backdrop-blur-xl sticky top-0 z-40">
         <div className="flex items-center gap-4">
-          <button onClick={onClose} className="p-3 bg-white/5 border border-white/10 rounded-2xl text-white hover:border-[#00F2FF]/50 transition-all flex items-center justify-center">
+          <button onClick={onClose} className="p-3 bg-white/5 border border-white/10 rounded-2xl text-white hover:border-[#6366F1]/50 transition-all flex items-center justify-center">
             <ArrowLeft size={18} />
           </button>
           <div>
             <h1 className="text-lg font-orbitron font-bold text-white flex items-center gap-2">
-              {titleInfo.main} <span className="text-xs px-2 py-0.5 bg-[#00F2FF]/20 text-[#00F2FF] rounded-md font-sans">{titleInfo.tag}</span>
+              {titleInfo.main} <span className="text-xs px-2 py-0.5 bg-[#6366F1]/20 text-[#6366F1] rounded-md font-sans">{titleInfo.tag}</span>
             </h1>
             <p className="text-xs text-gray-400">{titleInfo.sub}</p>
           </div>
@@ -2501,13 +2862,24 @@ const DocumentWorkspace: React.FC<{
             className="hidden" 
           />
           <button 
+            onClick={() => {
+              setAiJsonInput("");
+              setAiError(null);
+              setIsAiPanelOpen(true);
+            }} 
+            className="bg-white/5 border border-white/10 text-white font-bold py-3 px-6 rounded-2xl font-orbitron text-sm transition-all hover:bg-white/10 flex items-center gap-2 scale-100 hover:scale-105 active:scale-95"
+          >
+            <Sparkles size={18} className="text-[#6366F1]" />
+            AI DATA MODE
+          </button>
+          <button 
             onClick={() => document.getElementById('workspace-pdf-upload')?.click()} 
             className="bg-white/5 border border-white/10 text-white font-bold py-3 px-6 rounded-2xl font-orbitron text-sm transition-all hover:bg-white/10 flex items-center gap-2 scale-100 hover:scale-105 active:scale-95"
           >
             <Upload size={18} />
             IMPORT PDF
           </button>
-          <button onClick={() => window.print()} className="bg-gradient-to-r from-[#00F2FF] to-[#8B5CF6] text-black font-bold py-3 px-6 rounded-2xl font-orbitron text-sm transition-all hover:shadow-[0_0_20px_rgba(0,242,255,0.4)] flex items-center gap-2 scale-100 hover:scale-105 active:scale-95">
+          <button onClick={handlePrint} className="bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-black font-bold py-3 px-6 rounded-2xl font-orbitron text-sm transition-all hover:shadow-[0_0_20px_rgba(99, 102, 241, 0.4)] flex items-center gap-2 scale-100 hover:scale-105 active:scale-95">
             <Printer size={18} />
             PRINT / SAVE PDF
           </button>
@@ -2518,12 +2890,14 @@ const DocumentWorkspace: React.FC<{
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-8 p-6 max-w-7xl mx-auto w-full h-[calc(100vh-80px)] overflow-hidden">
         
         {/* Left Pane: Form Inputs */}
-        <div className="no-print col-span-1 lg:col-span-7 h-full overflow-y-auto pr-2 no-scrollbar pb-24 space-y-6">
-          {renderActiveForm()}
-        </div>
+        {!isPrinting && (
+          <div className="no-print col-span-1 lg:col-span-7 h-full overflow-y-auto pr-2 no-scrollbar pb-24 space-y-6">
+            {renderActiveForm()}
+          </div>
+        )}
 
         {/* Right Pane: Sticky Live Preview */}
-        <div className="col-span-1 lg:col-span-5 h-full flex flex-col justify-start items-center overflow-y-auto pb-24 pr-1 scrollbar-thin">
+        <div className={`${isPrinting ? 'col-span-12' : 'col-span-1 lg:col-span-5'} h-full flex flex-col justify-start items-center overflow-y-auto pb-24 pr-1 scrollbar-thin`}>
           <div className="w-full text-center mb-3 no-print">
             <span className="text-xs text-gray-500 font-orbitron uppercase tracking-widest">LIVE PAPER PREVIEW (A4)</span>
           </div>
@@ -2546,17 +2920,181 @@ const DocumentWorkspace: React.FC<{
         </div>
 
       </div>
+
+      {/* AI Data Mode Sliding Panel */}
+      <AnimatePresence>
+        {isAiPanelOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.5 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsAiPanelOpen(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 no-print"
+            />
+            {/* Drawer */}
+            <motion.div 
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed top-0 left-0 h-full w-full max-w-lg bg-[#09090B] border-r border-white/10 shadow-2xl z-50 p-8 flex flex-col no-print"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <div>
+                  <h2 className="text-xl font-orbitron font-bold text-white flex items-center gap-2">
+                    <Sparkles size={22} className="text-[#6366F1]" />
+                    AI Data Mode
+                  </h2>
+                  <p className="text-xs text-slate-400">Import or export raw document JSON payload</p>
+                </div>
+                <button 
+                  onClick={() => setIsAiPanelOpen(false)}
+                  className="p-2 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 text-white transition-all text-lg font-bold"
+                >
+                  &times;
+                </button>
+              </div>
+
+              {/* Import Section */}
+              <div className="flex-1 flex flex-col gap-4 overflow-y-auto mb-6 no-scrollbar">
+                <div>
+                  <span className="block text-xs font-bold text-[#6366F1] uppercase font-orbitron mb-2">JSON Import Hub</span>
+                  <p className="text-[11px] text-slate-400 mb-3">
+                    Paste a structured JSON block matching the document schema. The workspace will hydrate instantly.
+                  </p>
+                  <textarea 
+                    rows={12} 
+                    value={aiJsonInput}
+                    onChange={(e) => {
+                      setAiJsonInput(e.target.value);
+                      setAiError(null);
+                    }}
+                    placeholder={`{\n  "fullName": "Your Name",\n  ... \n}`}
+                    className="w-full bg-[#09090B] border border-white/10 rounded-2xl p-4 text-xs font-mono text-white focus:outline-none focus:ring-1 focus:ring-[#6366F1] leading-relaxed resize-none"
+                  />
+                  {aiError && (
+                    <div className="mt-2 text-xs text-red-400 flex items-center gap-1.5 bg-red-500/10 border border-red-500/20 p-3 rounded-xl">
+                      <AlertCircle size={14} />
+                      {aiError}
+                    </div>
+                  )}
+                  <button 
+                    onClick={() => handleImportJson(aiJsonInput)}
+                    className="mt-4 w-full bg-[#6366F1] hover:bg-[#5254e2] text-white font-bold py-3.5 px-6 rounded-2xl font-orbitron text-xs tracking-wider transition-all scale-100 hover:scale-102 active:scale-98"
+                  >
+                    HYDRATE STATE
+                  </button>
+                </div>
+
+                <div className="border-t border-white/10 my-4" />
+
+                {/* Export Section */}
+                <div>
+                  <span className="block text-xs font-bold text-emerald-400 uppercase font-orbitron mb-2">Data Exporter</span>
+                  <p className="text-[11px] text-slate-400 mb-4">
+                    Grab the current state of this builder workspace as raw structured JSON.
+                  </p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button 
+                      onClick={handleExportJson}
+                      className="bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold py-3 px-4 rounded-xl font-orbitron text-[11px] transition-all flex items-center justify-center gap-2"
+                    >
+                      COPY TO CLIPBOARD
+                    </button>
+                    <button 
+                      onClick={() => {
+                        let dataToExport = null;
+                        if (toolId === '1') dataToExport = cvData;
+                        else if (toolId === '2') dataToExport = invoiceData;
+                        else if (toolId === '3') dataToExport = coverLetterData;
+                        else if (toolId === '4') dataToExport = quotationData;
+                        else if (toolId === '5') dataToExport = ndaData;
+                        const jsonString = JSON.stringify(dataToExport, null, 2);
+                        const blob = new Blob([jsonString], { type: 'application/json' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `docstudio_export_${toolId}.json`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                        showToast("JSON downloaded successfully!", "success");
+                      }}
+                      className="bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold py-3 px-4 rounded-xl font-orbitron text-[11px] transition-all flex items-center justify-center gap-2"
+                    >
+                      DOWNLOAD FILE
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Workspace Toast */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: -50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 20, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9, y: -20 }}
+            className={`fixed top-0 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl border backdrop-blur-2xl transition-all ${
+              toast.type === 'success' 
+                ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' 
+                : 'bg-red-500/10 border-red-500/20 text-red-400'
+            }`}
+          >
+            {toast.type === 'success' ? <Check size={18} /> : <AlertCircle size={18} />}
+            <span className="text-sm font-medium font-orbitron tracking-wide">{toast.message}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
 // Main App Component
 const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<AppRoute>(AppRoute.HOME);
   const [selectedService, setSelectedService] = useState<ServiceCardData | null>(null);
   const [isWorkspaceActive, setIsWorkspaceActive] = useState<boolean>(false);
   const [activeToolId, setActiveToolId] = useState<string>('1');
   const [initialData, setInitialData] = useState<any>(null);
+
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const cvDataParam = params.get('cvData');
+    if (cvDataParam) {
+      try {
+        // Safe decoding of Base64 Unicode
+        let base64 = cvDataParam.replace(/-/g, '+').replace(/_/g, '/');
+        while (base64.length % 4) {
+          base64 += '=';
+        }
+        const decodedString = decodeURIComponent(
+          window.atob(base64)
+            .split('')
+            .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+            .join('')
+        );
+        const parsed = JSON.parse(decodedString);
+        
+        // Simple schema validation
+        if (parsed && parsed.fullName) {
+          setInitialData(parsed);
+          setActiveToolId('1'); // CV Builder
+          setIsWorkspaceActive(true);
+        } else {
+          console.error("Invalid CV JSON schema: fullName is missing.");
+        }
+      } catch (err) {
+        console.error("Failed to decode cvData from URL:", err);
+      }
+    }
+  }, []);
 
   const handleImportPdfClick = () => {
     document.getElementById('dashboard-pdf-upload')?.click();
@@ -2582,11 +3120,11 @@ const App: React.FC = () => {
   };
 
   const services: ServiceCardData[] = [
-    { id: '1', title: 'CV Builder', description: 'ATS & EE optimized South African CVs', icon: <FileText size={28} />, color: '#00F2FF' },
+    { id: '1', title: 'CV Builder', description: 'ATS & EE optimized South African CVs', icon: <FileText size={28} />, color: '#6366F1' },
     { id: '2', title: 'Tax Invoice', description: 'Professional invoicing for client gigs', icon: <Receipt size={28} />, color: '#8B5CF6' },
-    { id: '3', title: 'Cover Letter', description: 'Persuasive AI-assisted cover letters', icon: <FileSignature size={28} />, color: '#F472B6' },
-    { id: '4', title: 'Quotation', description: 'Instant itemized pricing quotations', icon: <Layers size={28} />, color: '#34D399' },
-    { id: '5', title: 'NDA Generator', description: 'Legally compliant non-disclosure agreements', icon: <UserCheck size={28} />, color: '#FBBF24' }
+    { id: '3', title: 'Cover Letter', description: 'Persuasive AI-assisted cover letters', icon: <FileSignature size={28} />, color: '#0EA5E9' },
+    { id: '4', title: 'Quotation', description: 'Instant itemized pricing quotations', icon: <Layers size={28} />, color: '#10B981' },
+    { id: '5', title: 'NDA Generator', description: 'Legally compliant non-disclosure agreements', icon: <UserCheck size={28} />, color: '#F59E0B' }
   ];
 
   const handleStartProject = () => {
@@ -2611,7 +3149,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen pb-32">
+    <div className="min-h-screen pb-12">
       <BackgroundOrbs />
       
       <main className="max-w-4xl mx-auto">
@@ -2622,7 +3160,7 @@ const App: React.FC = () => {
         <div className="px-6 mb-8">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-white font-orbitron font-bold text-xl">Service Hub</h2>
-            <button className="text-[#00F2FF] text-xs font-bold font-orbitron tracking-widest font-sans">VIEW ALL</button>
+            <button className="text-[#6366F1] text-xs font-bold font-orbitron tracking-widest font-sans">VIEW ALL</button>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
@@ -2668,18 +3206,16 @@ const App: React.FC = () => {
         </div>
 
         <div className="px-6 mt-12">
-          <div className="bg-gradient-to-r from-[#8B5CF6]/20 to-[#00F2FF]/20 backdrop-blur-xl border border-white/10 rounded-[2rem] p-8 relative overflow-hidden">
+          <div className="bg-gradient-to-r from-[#8B5CF6]/20 to-[#6366F1]/20 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-8 relative overflow-hidden">
             <div className="relative z-10">
               <h3 className="text-white font-orbitron font-extrabold text-2xl mb-2">Upgrade to Pro</h3>
               <p className="text-gray-300 text-sm mb-6 max-w-[240px]">Get unlimited exports and AI design assistance for only $4.99/mo.</p>
               <button className="bg-white text-black font-bold py-3 px-8 rounded-xl font-orbitron text-xs shadow-lg">LEARN MORE</button>
             </div>
-            <div className="absolute right-[-20px] bottom-[-20px] w-48 h-48 bg-[#00F2FF]/20 rounded-full blur-3xl" />
+            <div className="absolute right-[-20px] bottom-[-20px] w-48 h-48 bg-[#6366F1]/20 rounded-full blur-3xl" />
           </div>
         </div>
       </main>
-
-      <BottomNav activeTab={activeTab} setTab={setActiveTab} />
 
       <AnimatePresence>
         {selectedService && (
