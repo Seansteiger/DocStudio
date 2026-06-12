@@ -33,11 +33,19 @@ export interface JobExperience {
   responsibilities: string;
 }
 
+export interface TertiaryModule {
+  moduleName: string;
+  score: number;
+  grade?: string;
+}
+
 export interface EducationQualification {
   id: string;
   qualificationName: string;
   institution: string;
   yearCompleted: string;
+  status?: string;
+  tertiaryModules?: TertiaryModule[];
 }
 
 export interface ReferenceContact {

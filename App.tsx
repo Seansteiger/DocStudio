@@ -585,6 +585,17 @@ const initialCvData: SouthAfricanCvData = {
   ],
   education: [
     {
+      id: "e0",
+      qualificationName: "Undergraduate Studies in Sciences",
+      institution: "University of Johannesburg",
+      yearCompleted: "2023 — May 2026",
+      status: "Incomplete / Discontinued",
+      tertiaryModules: [
+        { moduleName: "Computer Literacy", score: 90, grade: "Distinction" },
+        { moduleName: "Maths-Calculus of one variable functions", score: 56 }
+      ]
+    },
+    {
       id: "e1",
       qualificationName: "National Senior Certificate (Matric - 2 Distinctions)",
       institution: "Hulwazi Secondary School",
@@ -2416,8 +2427,39 @@ const DocumentWorkspace: React.FC<{
               <div>
                 <div className="education-header flex justify-between items-start w-full gap-4 mb-1">
                   <h3 className="text-xs font-bold text-slate-900">{edu.qualificationName || "Qualification Title"}</h3>
-                  <span className="text-xs font-medium text-slate-700 whitespace-nowrap">{edu.yearCompleted ? `Completed ${edu.yearCompleted}` : ""}</span>
+                  <span className="text-xs font-medium text-slate-700 whitespace-nowrap">
+                    {edu.yearCompleted ? (edu.yearCompleted.includes("Completed") || edu.yearCompleted.includes("—") ? edu.yearCompleted : `Completed ${edu.yearCompleted}`) : ""}
+                  </span>
                 </div>
+                {edu.status && (
+                  <div className="text-[10px] font-semibold text-rose-600 mb-2">{edu.status}</div>
+                )}
+
+                {/* Tertiary Modules */}
+                {edu.tertiaryModules && edu.tertiaryModules.length > 0 && (
+                  <div className="mt-3 border-t border-slate-200/50 pt-2 w-full">
+                    <div className="text-[10px] font-bold text-slate-950 font-sans tracking-wide mb-1">
+                      KEY MODULES COMPLETED
+                    </div>
+                    <table className="w-full text-[10px] text-left text-slate-700 leading-normal border-collapse mt-1">
+                      <tbody>
+                        {edu.tertiaryModules.map((mod, mIdx) => (
+                          <tr key={mIdx} className="border-b border-slate-100">
+                            <td className="py-1.5 font-medium text-slate-800 font-sans">{mod.moduleName}</td>
+                            <td className="py-1.5 text-right font-sans">
+                              <span className="inline-flex items-center gap-1.5">
+                                <span className="font-bold text-slate-900">{mod.score}%</span>
+                                {mod.grade && (
+                                  <span className="px-1.5 py-0.5 text-[8px] font-semibold bg-emerald-50 text-emerald-700 rounded">{mod.grade}</span>
+                                )}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
 
                 {/* Matric Subject Achievement Matrix Table */}
                 {cvData.isMatricHighest && idx === cvData.education.length - 1 && cvData.matricSubjects && cvData.matricSubjects.length > 0 && (() => {
