@@ -1,0 +1,115 @@
+{
+  "fullName": "Neo Shawn Sekatane",
+  "headline": "AI Vibe Coder / Full-Stack Developer",
+  "idNumber": "0305135423088",
+  "passportNumber": "",
+  "useIdNumber": true,
+  "isInternational": false,
+  "gender": "Male",
+  "demographics": "African",
+  "driversLicense": "None",
+  "hasPdp": false,
+  "languages": [
+    {
+      "name": "English",
+      "speakProficiency": "Fluent",
+      "writeProficiency": "Fluent"
+    },
+    {
+      "name": "Sepedi",
+      "speakProficiency": "Native",
+      "writeProficiency": "Fluent"
+    },
+    {
+      "name": "isiZulu",
+      "speakProficiency": "Fluent",
+      "writeProficiency": "Basic"
+    },
+    {
+      "name": "Xitsonga",
+      "speakProficiency": "Conversational",
+      "writeProficiency": "Basic"
+    }
+  ],
+  "cellNumber": "+27 69 975 1347",
+  "emailAddress": "nsdsekatane@gmail.com",
+  "githubUrl": "github.com/Seansteiger",
+  "portfolioUrl": "https://docstudio-lovat.vercel.app",
+  "currentLocation": "Johannesburg, Gauteng",
+  "noticePeriod": "Immediate",
+  "professionalSummary": "Innovative Full-Stack Developer and AI Vibe Coder experienced in engineering responsive, high-performance web applications using modern JavaScript/TypeScript (React, Next.js, Node.js). Skilled in leveraging state-of-the-art AI-assisted tools (Cursor, Claude Code, GitHub Copilot and Antigravity) to translate complex UI/UX designs into pixel-perfect digital products at a rapid pace while maintaining code quality. Based in Johannesburg, immediately available for on-site employment. Fully committed to USA EST hours (3:00 PM - 12:00 AM).",
+  "workExperience": [
+    {
+      "id": "exp-1",
+      "jobTitle": "Full-Stack Developer & AI Vibe Coder",
+      "companyName": "Jozi Student Hub (Pty) Ltd",
+      "location": "Johannesburg, Gauteng",
+      "startDate": "02/2025",
+      "endDate": "02/2026",
+      "responsibilities": "• Architected and deployed the core responsive e-commerce web platform (jozistudenthub.co.za), generating 100% of online company revenue with 99.9% uptime.\n• Integrated payment platforms (Payfast and Yoco) as per client request. Added email receipt automation for order tracking.\n• Included Abandoned Cart recovery as well as a dedicated admin dashboard with revenue tracking and product management.\n• Leveraged AI-assisted development workflows (Cursor, Antigravity & GitHub Copilot) to accelerate feature shipping speed by 60% and resolve edge cases rapidly without sacrificing code quality.\n• Collaborated closely with UI/UX designers to translate Figma concepts into clean, cross-browser compatible, and mobile-first responsive interfaces using React, Next.js, and modern CSS.\n• Streamlined store inventory management and backend API endpoints, reducing catalog update latency by 45%.\n• Optimized web asset delivery and DOM rendering performance, achieving 95+ Google Lighthouse audit scores across mobile and desktop devices.\n• Handled the SEO overhead to make sure the store ranks high on google search for user accessibility."
+    },
+    {
+      "id": "exp-2",
+      "jobTitle": "Software Developer (AI Assisted)",
+      "companyName": "SteigerOnline",
+      "location": "Johannesburg, Gauteng",
+      "startDate": "07/2025",
+      "endDate": "Present",
+      "responsibilities": "• Launched the Company Website for clients to view the company's work.\n• Launched several projects under the SteigerOnline brand, assigning subdomains to every subsequent project.\n• Launched a CV generator (DocStudio), which was utilized to author and engineer this CV.\n• Developed a social platform that allows users to chat and make end-to-end encrypted voice and video calls via the browser.\n• Developed a web app that allows a user to control their desktop from their mobile device using a python script with millisecond touch-navigation latency.\n• Developed a 3D QR Code generator that allows users to generate scannable 3D illustrations."
+    }
+  ],
+  "education": [
+    {
+      "id": "edu-1",
+      "qualificationName": "National Senior Certificate (Matric) – 2 Distinctions",
+      "institution": "Hulwazi Secondary School",
+      "yearCompleted": "2020",
+      "status": "Completed",
+      "tertiaryModules": [
+        {
+          "moduleName": "English First Additional Language",
+          "score": 80,
+          "grade": "Distinction (Level 7)"
+        },
+        {
+          "moduleName": "Life Sciences",
+          "score": 84,
+          "grade": "Distinction (Level 7)"
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "ref-1",
+      "referenceName": "Koketso Chesa",
+      "companyTitle": "Director at The Edutainment Company",
+      "contactEmail": "lumketso@gmail.com",
+      "contactPhone": "+27 81 826 5297",
+      "relationship": "Executive Supervisor & Engineering Mentor"
+    },
+    {
+      "id": "ref-2",
+      "referenceName": "Nqobile Ngwenya",
+      "companyTitle": "Academic Mentor at Hulwazi Secondary School",
+      "contactEmail": "-",
+      "contactPhone": "+27 61 746 7590",
+      "relationship": "Academic Reference"
+    }
+  ],
+  "skills": [
+    "Vibe Coding & Rapid Prototyping",
+    "TypeScript & JavaScript (ES6+)",
+    "Next.js & Vite",
+    "HTML5 & Modern CSS / Tailwind CSS",
+    "Responsive Web Design & Mobile-First Layouts",
+    "Cross-Browser Compatibility & Optimization",
+    "RESTful API Integration & JSON Schemas",
+    "UI/UX Implementation & Prototyping",
+    "Git & GitHub Version Control",
+    "AI-Assisted Development (Antigravity, Cursor, Claude Code, Copilot)",
+    "Git",
+    "Node.js",
+    "Communication"
+  ]
+}

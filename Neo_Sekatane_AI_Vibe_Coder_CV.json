@@ -1,0 +1,123 @@
+{
+  "fullName": "Neo Shawn Sekatane",
+  "headline": "AI Vibe Coder / Full-Stack Developer",
+  "idNumber": "0305135423088",
+  "passportNumber": "",
+  "useIdNumber": true,
+  "isInternational": false,
+  "gender": "Male",
+  "demographics": "African",
+  "driversLicense": "None",
+  "hasPdp": false,
+  "languages": [
+    {
+      "name": "English",
+      "speakProficiency": "Fluent",
+      "writeProficiency": "Fluent"
+    },
+    {
+      "name": "Sepedi",
+      "speakProficiency": "Native",
+      "writeProficiency": "Fluent"
+    },
+    {
+      "name": "isiZulu",
+      "speakProficiency": "Fluent",
+      "writeProficiency": "Basic"
+    },
+    {
+      "name": "Xitsonga",
+      "speakProficiency": "Conversational",
+      "writeProficiency": "Basic"
+    }
+  ],
+  "cellNumber": "+27 69 975 1347",
+  "emailAddress": "nsdsekatane@gmail.com",
+  "linkedInUrl": "linkedin.com/in/neo-sekatane",
+  "portfolioUrl": "https://docstudio-lovat.vercel.app",
+  "currentLocation": "Johannesburg, Gauteng",
+  "noticePeriod": "Immediate",
+  "professionalSummary": "Innovative Full-Stack Developer and AI 'Vibe Coder' experienced in engineering responsive, high-performance web applications using modern JavaScript/TypeScript (React, Next.js, Node.js). Skilled in leveraging state-of-the-art AI-assisted tools (Cursor, Claude Code, GitHub Copilot, Windsurf) to translate complex UI/UX designs into pixel-perfect digital products at rapid turnaround times. Based locally in Johannesburg, immediately available for on-site collaboration in Houghton Estate, and fully committed to USA EST hours (3:00 PM – 12:00 AM) supporting fast-paced North American client operations.",
+  "workExperience": [
+    {
+      "id": "exp-1",
+      "jobTitle": "Full-Stack Developer & AI Vibe Coder",
+      "companyName": "Jozi Student Hub (Pty) Ltd",
+      "location": "Johannesburg, Gauteng",
+      "startDate": "02/2025",
+      "endDate": "02/2026",
+      "responsibilities": "• Architected and deployed the core responsive e-commerce web platform (jozistudenthub.co.za), generating 100% of online company revenue with 99.9% uptime.\n• Leveraged AI-assisted development workflows (Cursor, Claude Code, GitHub Copilot) to accelerate feature shipping speed by 60% and resolve edge cases rapidly without sacrificing code quality.\n• Collaborated closely with UI/UX designers to translate Figma concepts into clean, cross-browser compatible, and mobile-first responsive interfaces using React, Next.js, and modern CSS.\n• Streamlined store inventory management and backend API endpoints, reducing catalog update latency by 45%.\n• Optimized web asset delivery and DOM rendering performance, achieving 95+ Google Lighthouse audit scores across mobile and desktop devices."
+    },
+    {
+      "id": "exp-2",
+      "jobTitle": "Frontend Engineer & AI Systems Developer (Featured Project)",
+      "companyName": "DocStudio Suite",
+      "location": "Johannesburg, Gauteng",
+      "startDate": "2025",
+      "endDate": "Present",
+      "responsibilities": "• Engineered and published DocStudio (docstudio-lovat.vercel.app), a high-fidelity utility platform featuring glassmorphism UI, real-time client-side PDF export, and Model Context Protocol (MCP) integrations.\n• Implemented responsive, accessible design systems and dynamic document templates using React 19, TypeScript, Tailwind CSS, and Framer Motion.\n• Built an automated ATS (Applicant Tracking System) resume scoring engine providing instant heuristic diagnostics and keyword density evaluation.\n• Maintained strict cross-browser compatibility across Chrome, Safari, Firefox, and Edge, enforcing responsive touch and desktop interactions."
+    }
+  ],
+  "education": [
+    {
+      "id": "edu-1",
+      "qualificationName": "National Senior Certificate (Matric) – 2 Distinctions",
+      "institution": "Hulwazi Secondary School",
+      "yearCompleted": "2020",
+      "status": "Completed",
+      "tertiaryModules": [
+        {
+          "moduleName": "English First Additional Language",
+          "score": 80,
+          "grade": "Distinction (Level 7)"
+        },
+        {
+          "moduleName": "Life Sciences",
+          "score": 84,
+          "grade": "Distinction (Level 7)"
+        }
+      ]
+    },
+    {
+      "id": "edu-2",
+      "qualificationName": "Modern Full-Stack & AI-Assisted Software Engineering",
+      "institution": "Applied Software Engineering Curriculum",
+      "yearCompleted": "2024 – 2026",
+      "status": "Continuous Professional Mastery"
+    }
+  ],
+  "references": [
+    {
+      "id": "ref-1",
+      "referenceName": "Sean Steiger",
+      "companyTitle": "CEO at Jozi Student Hub / Steiger.Online",
+      "contactEmail": "onlinesteiger@gmail.com",
+      "contactPhone": "+27 62 365 7931",
+      "relationship": "Executive Supervisor & Engineering Mentor"
+    },
+    {
+      "id": "ref-2",
+      "referenceName": "Nqobile Ngwenya",
+      "companyTitle": "Academic Mentor at Hulwazi Secondary School",
+      "contactEmail": "Available on request",
+      "contactPhone": "+27 61 746 7590",
+      "relationship": "Academic Reference"
+    }
+  ],
+  "skills": [
+    "AI-Assisted Development (Cursor, Claude Code, Windsurf, Copilot)",
+    "Vibe Coding & Rapid Prototyping",
+    "React & React 19",
+    "TypeScript & JavaScript (ES6+)",
+    "Next.js & Vite",
+    "HTML5 & Modern CSS / Tailwind CSS",
+    "Responsive Web Design & Mobile-First Layouts",
+    "Cross-Browser Compatibility & Optimization",
+    "RESTful API Integration & JSON Schemas",
+    "UI/UX Implementation & Prototyping",
+    "Git & GitHub Version Control",
+    "Agile Collaboration & Fast Turnaround Delivery",
+    "Performance Tuning & Lighthouse Auditing",
+    "USA EST Timezone Alignment (3pm–12am)"
+  ]
+}
