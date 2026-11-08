@@ -13,6 +13,20 @@ import {
 } from '../types/document';
 import { billingService } from '../services/storage/billingService';
 
+export type {
+  SouthAfricanCvData,
+  InvoiceData,
+  CoverLetterData,
+  QuotationData,
+  NdaData,
+  ResignationData,
+  FreelanceContractData,
+  OfficialNoticeData,
+  CertificateData,
+  ReceiptData,
+  UnifiedBillingData
+};
+
 export const sampleCvData: SouthAfricanCvData = {
   fullName: "Lindiwe Nomvula Dlamini",
   headline: "Senior Full-Stack Cloud Engineer & Technical Lead",

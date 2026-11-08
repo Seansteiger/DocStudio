@@ -212,7 +212,7 @@ export const DOCSTUDIO_MCP_TOOLS: McpToolDefinition[] = [
     inputSchema: {
       type: "object",
       properties: {
-        toolId: { type: "string", enum: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] },
+        toolId: { type: "string", enum: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"], description: "Tool ID from 1 to 10" },
         industry: { type: "string", description: "Industry flavor (e.g. 'tech', 'finance', 'creative', 'legal')" }
       },
       required: ["toolId"]
@@ -225,7 +225,7 @@ export const DOCSTUDIO_MCP_TOOLS: McpToolDefinition[] = [
     inputSchema: {
       type: "object",
       properties: {
-        status: { type: "string", enum: ["all", "draft", "final", "archived"] },
+        status: { type: "string", enum: ["all", "draft", "final", "archived"], description: "Document status filter" },
         toolId: { type: "string", description: "Filter by toolId (1-10)" }
       }
     }

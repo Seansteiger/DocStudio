@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TAX INVOICE - INV-0218</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #090b10;
+      color: #0f172a;
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      font-size: 9pt;
+      line-height: 1.4;
+      padding: 24px 12px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+    .action-bar {
+      max-width: 210mm;
+      margin: 0 auto 16px auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-primary { background: #059669; color: white; border: none; }
+    .btn-secondary { background: #1e293b; color: #f8fafc; border: 1px solid #334155; }
+    .page-sheet {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 44px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    table { border-collapse: collapse !important; width: 100%; }
+    th, td { border: 1px solid #94a3b8 !important; }
+    @media print {
+      body { background: white !important; padding: 0 !important; }
+      .action-bar { display: none !important; }
+      .page-sheet { box-shadow: none !important; margin: 0 !important; width: 100% !important; min-height: 100% !important; padding: 25px 35px !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="action-bar">
+    <div style="color: #94a3b8; font-family: 'JetBrains Mono', monospace; font-size: 11px;">
+      📄 INV-0218 • TAX INVOICE (modern-ledger)
+    </div>
+    <div style="display: flex; gap: 8px;">
+      <button onclick="window.print()" class="btn btn-primary">🖨️ Print / Save as PDF</button>
+      <a href="https://docstudio-lovat.vercel.app/" target="_blank" class="btn btn-secondary">🌐 DocStudio App</a>
+    </div>
+  </div>
+
+  <div class="page-sheet">
+    <div>
+      <div style="height: 5px; background: #0f172a; border-radius: 2px 2px 0 0; margin-bottom: 24px;"></div>
+
+      <!-- Header: Top-Left Logo & Issuer Details -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 22px; margin-bottom: 22px; border-bottom: 1px solid #e2e8f0;">
+        <div style="max-width: 420px;">
+          <!-- Top-Left Logo (Prominently placed at top-left) -->
+          <div style="margin-bottom: 12px;">
+            <img src="data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 40" fill="none"><rect width="36" height="36" y="2" rx="7" fill="%23059669"/><path d="M11 27L18 13L25 27M13.5 22.5H22.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="27" cy="13" r="2.5" fill="%2334d399"/><text x="44" y="21" font-family="system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-weight="800" font-size="14" fill="%230f172a" letter-spacing="-0.03em">APEX</text><text x="84" y="21" font-family="system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-weight="500" font-size="14" fill="%23059669" letter-spacing="-0.02em">CLOUD</text><text x="44" y="33" font-family="system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-weight="600" font-size="7.5" fill="%2364748b" letter-spacing="0.08em">COMMERCIAL SOLUTIONS</text></svg>" alt="Apex Cloud Solutions (Pty) Ltd" style="max-height: 56px; max-width: 220px; object-fit: contain; display: block;" />
+          </div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 8pt; font-weight: bold; letter-spacing: 0.08em; text-transform: uppercase; color: #0f172a;">
+            TAX INVOICE
+          </div>
+          <h1 style="font-size: 18pt; font-weight: 800; color: #020617; margin-top: 4px; letter-spacing: -0.02em;">
+            Apex Cloud Solutions (Pty) Ltd
+          </h1>
+          <div style="font-size: 8pt; color: #64748b; margin-top: 2px;">Enterprise Cloud Architecture & Digital Systems</div>
+          <div style="font-size: 8pt; color: #475569; margin-top: 8px; line-height: 1.4;">
+            <div>Floor 14, Sandton City Office Towers, 5th Street, Sandton, 2196, South Africa</div>
+            <div>accounts@apexcloud.co.za • +27 (0) 11 883 4000</div>
+            <div class="mono" style="margin-top: 4px; color: #334155;">
+              VAT Reg: 4920194812 • Co Reg: 2019/148209/07
+            </div>
+          </div>
+        </div>
+
+        <!-- Document Identification -->
+        <div style="text-align: right;">
+          <div style="background: #0f172a; border: 1px solid #0f172a; padding: 10px 16px; border-radius: 8px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 7.5pt; text-transform: uppercase; font-weight: bold; color: #94a3b8;">
+              INVOICE NO
+            </div>
+            <div class="mono" style="font-size: 16pt; font-weight: 900; color: #ffffff;">
+              INV-0218
+            </div>
+          </div>
+          <div style="margin-top: 12px; font-size: 8pt; color: #475569; line-height: 1.5;">
+            <div>Date: <strong class="mono" style="color: #0f172a;">2026-10-15</strong></div>
+            <div>Due: <strong class="mono" style="color: #0f172a;">2026-10-29</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Client & Financial Callout Card (Zero Synthetic Badges) -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding: 16px; border-radius: 10px; background: #f8fafc; border: 1px solid #e2e8f0; margin-bottom: 24px;">
+        <div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 7.5pt; font-weight: bold; color: #64748b; text-transform: uppercase; margin-bottom: 4px;">
+            BILLED TO (CLIENT)
+          </div>
+          <div style="font-size: 11pt; font-weight: bold; color: #020617;">
+            BlueHorizon Logistics Group (Pty) Ltd
+          </div>
+          <div style="font-size: 8pt; color: #334155; margin-top: 2px;">Attn: Thabo Mokoena (Procurement Director)</div>
+          <div style="font-size: 8pt; color: #475569; margin-top: 4px;">88 Harbour Road, Foreshore, Cape Town, 8001</div>
+          <div class="mono" style="font-size: 8pt; color: #64748b; margin-top: 6px;">
+            <span>procurement@bluehorizon.co.za</span>
+            <div style="color: #334155; font-weight: 600; margin-top: 2px;">VAT: 4820194881</div>
+          </div>
+        </div>
+
+        <div style="text-align: right; display: flex; flex-direction: column; justify-content: space-between; border-left: 1px solid #e2e8f0; padding-left: 20px;">
+          <div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 7.5pt; font-weight: bold; color: #64748b; text-transform: uppercase;">
+              TOTAL INVOICE AMOUNT
+            </div>
+            <div class="mono" style="font-size: 20pt; font-weight: 900; color: #020617; margin-top: 4px;">
+              R 162 336,88
+            </div>
+          </div>
+          <div>
+            <div style="background: #fffbeb; border: 1px solid #fde68a; padding: 6px 12px; border-radius: 6px; display: inline-block;">
+                   <span style="font-size: 7.5pt; color: #92400e; display: block; font-weight: 600;">Balance Due:</span>
+                   <span class="mono" style="font-size: 11pt; font-weight: 800; color: #78350f;">R 162 336,88</span>
+                 </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Line Items Table (Crisp Explicit Borders on All Cells) -->
+      <div style="margin-bottom: 24px;">
+        <table style="width: 100%; border-collapse: collapse; border: 1px solid #94a3b8;">
+          <thead>
+            <tr style="background: #0f172a; color: #ffffff;">
+              <th style="border: 1px solid #94a3b8; padding: 10px 12px; text-align: left; font-size: 7.5pt; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; width: 42%;">
+                Item Description & Service Scope
+              </th>
+              <th style="border: 1px solid #94a3b8; padding: 10px 8px; text-align: center; font-size: 7.5pt; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; width: 13%;">
+                Units / Qty
+              </th>
+              <th style="border: 1px solid #94a3b8; padding: 10px 12px; text-align: right; font-size: 7.5pt; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; width: 15%;">
+                Rate
+              </th>
+              <th style="border: 1px solid #94a3b8; padding: 10px 12px; text-align: right; font-size: 7.5pt; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; width: 14%;">
+                Discount
+              </th>
+              <th style="border: 1px solid #94a3b8; padding: 10px 12px; text-align: right; font-size: 7.5pt; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; width: 16%;">
+                Total
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            
+      <tr style="background: #ffffff;">
+        <td style="border: 1px solid #94a3b8; padding: 10px 12px; vertical-align: middle;">
+          <div style="font-weight: 600; color: #0f172a; font-size: 8.5pt;">Cloud Architecture Audit & High-Availability Migration Strategy</div>
+          
+        </td>
+        <td style="border: 1px solid #94a3b8; padding: 10px 8px; text-align: center; font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; vertical-align: middle;">
+          1 <span style="font-size: 7pt; color: #64748b;">Fixed</span>
+        </td>
+        <td style="border: 1px solid #94a3b8; padding: 10px 12px; text-align: right; font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; vertical-align: middle;">
+          R 38 500,00
+        </td>
+        <td style="border: 1px solid #94a3b8; padding: 10px 12px; text-align: right; font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; vertical-align: middle;">
+          <span style="color: #94a3b8;">0%</span>
+        </td>
+        <td style="border: 1px solid #94a3b8; padding: 10px 12px; text-align: right; font-weight: bold; font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; vertical-align: middle; color: #0f172a;">
+          R 38 500,00
+        </td>
+      </tr>
+    
+      <tr style="background: #ffffff;">
+        <td style="border: 1px solid #94a3b8; padding: 10px 12px; vertical-align: middle;">
+          <div style="font-weight: 600; color: #0f172a; font-size: 8.5pt;">Custom Fleet Management Portal Frontend (React 19 / TypeScript)</div>
+          
+        </td>
+        <td style="border: 1px solid #94a3b8; padding: 10px 8px; text-align: center; font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; vertical-align: middle;">
+          65 <span style="font-size: 7pt; color: #64748b;">Hours</span>
+        </td>
+        <td style="border: 1px solid #94a3b8; padding: 10px 12px; text-align: right; font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; vertical-align: middle;">
+          R 950,00
+        </td>
+        <td style="border: 1px solid #94a3b8; padding: 10px 12px; text-align: right; font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; vertical-align: middle;">
+          <span style="color: #059669; font-weight: bold;">5%</span>
+        </td>
+        <td style="border: 1px solid #94a3b8; padding: 10px 12px; text-align: right; font-weight: bold; font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; vertical-align: middle; color: #0f172a;">
+          R 58 662,50
+        </td>
+      </tr>
+    
+      <tr style="background: #ffffff;">
+        <td style="border: 1px solid #94a3b8; padding: 10px 12px; vertical-align: middle;">
+          <div style="font-weight: 600; color: #0f172a; font-size: 8.5pt;">Automated Telematics & Real-Time Tracking REST API Microservices</div>
+          
+        </td>
+        <td style="border: 1px solid #94a3b8; padding: 10px 8px; text-align: center; font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; vertical-align: middle;">
+          40 <span style="font-size: 7pt; color: #64748b;">Hours</span>
+        </td>
+        <td style="border: 1px solid #94a3b8; padding: 10px 12px; text-align: right; font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; vertical-align: middle;">
+          R 1 100,00
+        </td>
+        <td style="border: 1px solid #94a3b8; padding: 10px 12px; text-align: right; font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; vertical-align: middle;">
+          <span style="color: #94a3b8;">0%</span>
+        </td>
+        <td style="border: 1px solid #94a3b8; padding: 10px 12px; text-align: right; font-weight: bold; font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; vertical-align: middle; color: #0f172a;">
+          R 44 000,00
+        </td>
+      </tr>
+    
+          </tbody>
+        </table>
+
+        <!-- Totals Box -->
+        <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
+          <div style="width: 320px; font-size: 8.5pt;">
+            <div style="display: flex; justify-content: space-between; color: #475569; padding: 4px 0;">
+              <span>Subtotal (Net):</span>
+              <span class="mono">R 141 162,50</span>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; color: #475569; padding: 4px 0;">
+              <span>Standard VAT (15%):</span>
+              <span class="mono">R 21 174,38</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 11pt; font-weight: 800; color: #020617; padding-top: 8px; border-top: 2px solid #0f172a; margin-top: 4px;">
+              <span>Grand Total:</span>
+              <span class="mono" style="color: #0f172a;">R 162 336,88</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer: Banking Remittance & Legal Note -->
+    <div style="border-top: 2px solid #0f172a; padding-top: 20px; margin-top: 24px;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: flex-start;">
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 14px; border-radius: 8px; font-size: 8pt;">
+          <div style="font-weight: bold; text-transform: uppercase; font-size: 7.5pt; color: #0f172a; margin-bottom: 8px;">
+            🏦 Banking & EFT Remittance Details
+          </div>
+          <div style="color: #334155; line-height: 1.6;">
+            <div>Bank: <strong>First National Bank (FNB)</strong></div>
+            <div>Account Holder: Apex Cloud Solutions Pty Ltd</div>
+            <div class="mono">Account Number: <strong>62891048291</strong></div>
+            <div class="mono">Branch Code: 250655 (Business Cheque Account)</div>
+            <div class="mono" style="margin-top: 4px; border-top: 1px solid #cbd5e1; padding-top: 4px;">
+              Payment Reference: <strong style="color: #0f172a;">INV-0218</strong>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align: right; font-size: 8pt; color: #475569;">
+          <div style="font-weight: 600; color: #0f172a; margin-bottom: 4px;">Payment Terms & Conditions:</div>
+          <div style="font-size: 7.5pt; line-height: 1.5;">Payment due strictly within 14 calendar days of tax invoice date. EFT payments must cite invoice number as payment reference.</div>
+          <div class="mono" style="font-size: 7pt; color: #94a3b8; margin-top: 12px;">
+            Official Tax Invoice • Value-Added Tax Act, 1991 • SARS VAT Compliant
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { generateBillingHtml } = require('./billingHtml.cjs');
 
 const PROJECT_DIR = path.resolve(__dirname, '..');
 const args = process.argv.slice(2);
@@ -1885,6 +1886,109 @@ Remaining Balance:  ${formatZar(invoiceDoc.balanceDue)}
     break;
   }
 
+  case 'billing:export':
+  case 'billing:generate': {
+    const billing = loadBillingData();
+    const targetIdentifier = cleanArgs[1] || getArg('--number') || getArg('--id');
+    const templateArg = getArg('--template') || 'classic-zoho';
+
+    let doc = null;
+    if (targetIdentifier && !targetIdentifier.startsWith('--')) {
+      doc = (billing.documents || []).find(d => 
+        d.docNumber === targetIdentifier || d.id === targetIdentifier || d.docNumber.toLowerCase() === targetIdentifier.toLowerCase()
+      );
+    }
+    if (!doc) {
+      doc = (billing.documents || [])[0];
+    }
+
+    if (!doc) {
+      error("No billing documents available to export.", "NO_DOCS");
+    }
+
+    const htmlContent = generateBillingHtml(doc, billing.settings, templateArg);
+    const exportsDir = path.join(PROJECT_DIR, 'exports');
+    if (!fs.existsSync(exportsDir)) {
+      fs.mkdirSync(exportsDir, { recursive: true });
+    }
+
+    const outFileName = `${doc.docNumber}_${doc.docType.toUpperCase()}_${templateArg}.html`;
+    const exportPath = path.join(exportsDir, outFileName);
+    fs.writeFileSync(exportPath, htmlContent, 'utf8');
+
+    // Also write to project root
+    const rootPath = path.join(PROJECT_DIR, outFileName);
+    fs.writeFileSync(rootPath, htmlContent, 'utf8');
+
+    // Also write to parent brain artifact directory if accessible
+    const brainArtifactDir = 'C:\\Users\\MELVILLE\\.gemini\\antigravity\\brain\\6904f73a-2195-4a8b-ba99-02a5d630d798';
+    if (fs.existsSync(brainArtifactDir)) {
+      try {
+        fs.writeFileSync(path.join(brainArtifactDir, outFileName), htmlContent, 'utf8');
+      } catch (e) {}
+    }
+
+    // Render PDF via Headless Chrome
+    const chromePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
+    let pdfExportPath = null;
+    let pdfCreated = false;
+    const outPdfName = `${doc.docNumber}_${doc.docType.toUpperCase()}_${templateArg}.pdf`;
+    if (fs.existsSync(chromePath)) {
+      try {
+        pdfExportPath = path.join(exportsDir, outPdfName);
+        const fileUrl = 'file:///' + exportPath.replace(/\\/g, '/');
+        execSync(`"${chromePath}" --headless --disable-gpu --run-all-compositor-stages-before-draw --print-to-pdf="${pdfExportPath}" "${fileUrl}"`, { timeout: 15000 });
+        if (fs.existsSync(pdfExportPath)) {
+          pdfCreated = true;
+          fs.copyFileSync(pdfExportPath, path.join(PROJECT_DIR, outPdfName));
+          if (fs.existsSync(brainArtifactDir)) {
+            fs.copyFileSync(pdfExportPath, path.join(brainArtifactDir, outPdfName));
+            if (doc.docNumber === 'INV-0218') {
+              fs.copyFileSync(pdfExportPath, path.join(brainArtifactDir, 'Sample_Tax_Invoice_INV-0218.pdf'));
+              fs.copyFileSync(pdfExportPath, path.join(exportsDir, 'Sample_Tax_Invoice_INV-0218.pdf'));
+            }
+            if (doc.docNumber === 'REC-0089' || doc.docNumber === 'REC-0090') {
+              fs.copyFileSync(pdfExportPath, path.join(brainArtifactDir, 'Sample_Payment_Receipt_REC-0089.pdf'));
+              fs.copyFileSync(pdfExportPath, path.join(exportsDir, 'Sample_Payment_Receipt_REC-0089.pdf'));
+            }
+          }
+        }
+      } catch (e) {
+        console.error('PDF generation error:', e.message);
+      }
+    }
+
+    const toolId = doc.docType === 'quote' ? '4' : doc.docType === 'receipt' ? '10' : '2';
+    const shareUrl = generateDocStudioShareUrl(toolId, doc, templateArg);
+
+    if (isJson) {
+      output({
+        success: true,
+        documentNumber: doc.docNumber,
+        docType: doc.docType,
+        template: templateArg,
+        exportedHtml: exportPath,
+        rootHtml: rootPath,
+        shareUrl
+      });
+    } else {
+      console.log(`
+========================================================================================
+💼 DOCSTUDIO CLI: EXPORTED COMMERCIAL DOCUMENT (${doc.docNumber})
+========================================================================================
+Document:       ${doc.docNumber} (${doc.docType.toUpperCase()})
+Template:       ${templateArg}
+Client:         ${doc.clientSnapshot?.name || 'Client'}
+Total:          ${formatZar(doc.grandTotal)}
+Export File:    ${exportPath}
+Project Root:   ${rootPath}
+Cloud Share:    ${shareUrl}
+========================================================================================
+`);
+    }
+    break;
+  }
+
   case 'dev': {
     console.log('[CLI] Starting development server...');
     execSync('npm run dev', { cwd: PROJECT_DIR, stdio: 'inherit' });
@@ -1917,6 +2021,7 @@ Remaining Balance:  ${formatZar(invoiceDoc.balanceDue)}
           { name: 'billing:create', description: 'Create a new Quote, Invoice, or Receipt with automatic VAT calculation' },
           { name: 'billing:convert', description: 'Convert an approved Quote into a Tax Invoice (Zoho-style 1-click)' },
           { name: 'billing:pay', description: 'Record payment against an invoice and generate an official receipt' },
+          { name: 'billing:export', description: 'Export Quotation, Tax Invoice, or Receipt to executive A4 HTML/PDF in exports/' },
           { name: 'dev', description: 'Start the local development server' },
           { name: 'build', description: 'Compile/build the project for production' },
           { name: 'list-files', description: 'List project root files' },

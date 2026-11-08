@@ -53,6 +53,7 @@ export interface OrganizationSettings {
   quoteCounter: number;
   invoiceCounter: number;
   receiptCounter: number;
+  showLogo?: boolean;
 }
 
 export interface BillingLineItem {
@@ -124,6 +125,7 @@ export interface UnifiedBillingData {
   paymentMethod?: PaymentMethod | string;
   receiptReference?: string;
   templateId?: string;
+  showLogo?: boolean;
   brandOverrides?: Partial<OrganizationSettings>;
   createdAt: string;
   updatedAt: string;
@@ -179,11 +181,13 @@ const CATALOG_KEY = 'docstudio_billing_catalog';
 const SETTINGS_KEY = 'docstudio_billing_settings';
 const DOCUMENTS_KEY = 'docstudio_billing_docs';
 
-// Realistic South African Seed Data
+// Realistic South African Seed Data & Crisp Geometric Default Brand Logo
+export const DEFAULT_BRAND_LOGO_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 40" fill="none"><rect width="36" height="36" y="2" rx="7" fill="%23059669"/><path d="M11 27L18 13L25 27M13.5 22.5H22.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="27" cy="13" r="2.5" fill="%2334d399"/><text x="44" y="21" font-family="system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-weight="800" font-size="14" fill="%230f172a" letter-spacing="-0.03em">APEX</text><text x="84" y="21" font-family="system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-weight="500" font-size="14" fill="%23059669" letter-spacing="-0.02em">CLOUD</text><text x="44" y="33" font-family="system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-weight="600" font-size="7.5" fill="%2364748b" letter-spacing="0.08em">COMMERCIAL SOLUTIONS</text></svg>`;
+
 export const DEFAULT_ORG_SETTINGS: OrganizationSettings = {
   companyName: "Apex Cloud Solutions (Pty) Ltd",
   tagline: "Enterprise Cloud Architecture & Digital Systems",
-  logoUrl: "",
+  logoUrl: DEFAULT_BRAND_LOGO_SVG,
   accentColor: "#059669", // Emerald Green
   email: "accounts@apexcloud.co.za",
   phone: "+27 (0) 11 883 4000",
@@ -198,7 +202,8 @@ export const DEFAULT_ORG_SETTINGS: OrganizationSettings = {
   paymentTerms: "Payment due strictly within 14 calendar days of tax invoice date. EFT payments must cite invoice number as payment reference.",
   quoteCounter: 104,
   invoiceCounter: 218,
-  receiptCounter: 89
+  receiptCounter: 89,
+  showLogo: true
 };
 
 export const SEED_CLIENTS: BillingClient[] = [
@@ -564,7 +569,8 @@ class BillingService {
       companyCell: settings.phone,
       companyAddress: settings.address,
       companyVatNumber: settings.vatNumber,
-      companyLogoUrl: settings.logoUrl,
+      companyLogoUrl: doc.brandOverrides?.logoUrl || settings.logoUrl || DEFAULT_BRAND_LOGO_SVG,
+      showLogo: doc.showLogo !== undefined ? doc.showLogo : (settings.showLogo !== undefined ? settings.showLogo : true),
       clientName: client?.name || '',
       clientEmail: client?.email || '',
       clientCell: client?.phone || '',

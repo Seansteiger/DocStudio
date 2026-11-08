@@ -66,15 +66,17 @@ export const DocumentCanvas: React.FC<DocumentCanvasProps> = ({
         className="transition-transform duration-150 origin-top flex justify-center w-full"
         style={{ transform: `scale(${zoomLevel})` }}
       >
-        {/* The Printable A4 Sheet (Standard 210mm x 297mm Ratio) */}
+        {/* The Printable A4 Sheet (Standard 210mm x 297mm Ratio: 794px x 1123px at 96 DPI) */}
         <div
           id="document-preview-page"
-          className="bg-white text-slate-900 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)] rounded-xs w-full max-w-[760px] min-h-[1050px] border border-slate-200 relative overflow-hidden"
+          data-testid="document-canvas"
+          className="bg-white text-slate-900 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)] rounded-xs w-[794px] min-h-[1123px] border border-slate-200 relative overflow-hidden"
           style={{
-            boxSizing: 'border-box'
+            boxSizing: 'border-box',
+            width: '794px'
           }}
         >
-          <div className="p-8 sm:p-12 h-full flex flex-col justify-between min-h-[inherit]">
+          <div className="p-8 sm:p-10 h-full flex flex-col justify-between min-h-[inherit] w-full">
             {renderDocumentContent()}
           </div>
         </div>

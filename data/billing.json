@@ -94,6 +94,63 @@
       "updatedAt": "2026-11-07T19:53:09.398Z"
     },
     {
+      "id": "doc-rec-0089",
+      "docType": "receipt",
+      "docNumber": "REC-0089",
+      "title": "Official Payment Receipt REC-0089 (BlueHorizon Logistics Group)",
+      "status": "paid",
+      "clientId": "cli-1",
+      "clientSnapshot": {
+        "name": "BlueHorizon Logistics Group (Pty) Ltd",
+        "contactPerson": "Thabo Mokoena (Procurement Director)",
+        "email": "procurement@bluehorizon.co.za",
+        "phone": "+27 82 555 9012",
+        "billingAddress": "88 Harbour Road, Foreshore, Cape Town, 8001",
+        "vatNumber": "4820194881"
+      },
+      "issueDate": "2026-10-28",
+      "dueDate": "2026-10-28",
+      "lineItems": [
+        {
+          "id": "li-rec-0089",
+          "description": "50% Commencement Milestone for Tax Invoice INV-0218",
+          "quantity": 1,
+          "unitPrice": 81168.44,
+          "discountPct": 0,
+          "taxRate": 0,
+          "unit": "Milestone"
+        }
+      ],
+      "vatRate": 0,
+      "discountAmount": 0,
+      "currency": "ZAR",
+      "currencySymbol": "R",
+      "subtotal": 81168.44,
+      "vatTotal": 0,
+      "grandTotal": 81168.44,
+      "amountPaid": 81168.44,
+      "balanceDue": 0,
+      "payments": [
+        {
+          "id": "pay-0089",
+          "documentId": "doc-inv-0218",
+          "receiptNumber": "REC-0089",
+          "amount": 81168.44,
+          "paymentDate": "2026-10-28",
+          "method": "EFT",
+          "reference": "EFT-BHL-49102",
+          "notes": "Initial milestone settlement"
+        }
+      ],
+      "linkedInvoiceNumber": "INV-0218",
+      "receiptReference": "EFT-BHL-49102",
+      "paymentMethod": "EFT",
+      "notes": "Payment of R 81 168,44 received via EFT for INV-0218. Thank you for your business.",
+      "termsAndConditions": "Official proof of payment. Retain for SARS audit compliance.",
+      "createdAt": "2026-10-28T14:30:00.000Z",
+      "updatedAt": "2026-10-28T14:30:00.000Z"
+    },
+    {
       "id": "doc-rec-1794081177887",
       "docType": "receipt",
       "docNumber": "REC-0090",

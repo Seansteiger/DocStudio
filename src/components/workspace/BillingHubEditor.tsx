@@ -408,6 +408,60 @@ export const BillingHubEditor: React.FC<BillingHubEditorProps> = ({
     reader.readAsDataURL(file);
   };
 
+  const handleQuickLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (uploadEvent) => {
+      const base64 = uploadEvent.target?.result as string;
+      if (base64) {
+        handleUpdateOrgSettings({ logoUrl: base64 });
+        commitDocUpdate({
+          companyLogoUrl: base64,
+          showLogo: true,
+          brandOverrides: {
+            ...currentDoc.brandOverrides,
+            logoUrl: base64
+          }
+        });
+        onShowToast("Top-left logo uploaded & updated!", 'success');
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleQuickLogoUrlChange = (url: string) => {
+    handleUpdateOrgSettings({ logoUrl: url });
+    commitDocUpdate({
+      companyLogoUrl: url,
+      brandOverrides: {
+        ...currentDoc.brandOverrides,
+        logoUrl: url
+      }
+    });
+  };
+
+  const handleQuickResetLogo = () => {
+    handleUpdateOrgSettings({ logoUrl: '' });
+    commitDocUpdate({
+      companyLogoUrl: '',
+      brandOverrides: {
+        ...currentDoc.brandOverrides,
+        logoUrl: ''
+      }
+    });
+    onShowToast("Reset to default vector logo", 'info');
+  };
+
+  const handleToggleLogoVisibility = () => {
+    const currentVis = currentDoc.showLogo !== false;
+    const nextVis = !currentVis;
+    commitDocUpdate({ showLogo: nextVis });
+    handleUpdateOrgSettings({ showLogo: nextVis });
+    onShowToast(nextVis ? "Top-left logo enabled on document" : "Top-left logo hidden from document", 'info');
+  };
+
   return (
     <div className="space-y-4 text-xs font-sans text-slate-200">
       {/* ========================================================= */}
@@ -581,6 +635,87 @@ export const BillingHubEditor: React.FC<BillingHubEditorProps> = ({
       {/* ========================================================= */}
       {activeTab === 'builder' && (
         <div className="space-y-4">
+          {/* Quick Header Logo & Brand Bar (1-Click Upload & URL Control) */}
+          <div className="bg-[#0E1118] border border-white/10 rounded-2xl p-4 space-y-3 shadow-xs">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <ImageIcon size={16} className="text-emerald-400" />
+                <h3 className="font-bold text-white text-sm">Top-Left Document Logo</h3>
+                <span className="text-[7pt] bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 px-2 py-0.5 rounded-full font-mono">
+                  Header Placement
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleToggleLogoVisibility}
+                  className={`px-2.5 py-1 rounded-xl text-xs font-semibold flex items-center gap-1.5 border transition-all active:scale-[0.98] ${
+                    currentDoc.showLogo !== false 
+                      ? 'bg-emerald-600/20 text-emerald-300 border-emerald-500/30' 
+                      : 'bg-white/5 text-slate-400 border-white/10 hover:text-white'
+                  }`}
+                  title="Toggle logo visibility on the rendered A4 document"
+                >
+                  <span>{currentDoc.showLogo !== false ? '✓ Logo Visible' : '✕ Logo Hidden'}</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 pt-1">
+              {/* Logo Thumbnail Preview */}
+              <div className="w-28 h-16 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center p-2 overflow-hidden shrink-0">
+                {(currentDoc.brandOverrides?.logoUrl || currentDoc.companyLogoUrl || orgSettings.logoUrl) ? (
+                  <img 
+                    src={currentDoc.brandOverrides?.logoUrl || currentDoc.companyLogoUrl || orgSettings.logoUrl} 
+                    alt="Logo Preview" 
+                    className="max-h-full max-w-full object-contain"
+                  />
+                ) : (
+                  <div className="text-center text-slate-500 text-[7pt] font-mono leading-tight">
+                    Default Vector Mark
+                  </div>
+                )}
+              </div>
+
+              {/* Upload & URL Controls */}
+              <div className="flex-1 min-w-[200px] space-y-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <label className="cursor-pointer bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition-all shadow-xs active:scale-[0.98]">
+                    <Upload size={13} />
+                    <span>Upload Logo Image</span>
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      onChange={handleQuickLogoUpload} 
+                      className="hidden" 
+                    />
+                  </label>
+
+                  {(currentDoc.brandOverrides?.logoUrl || currentDoc.companyLogoUrl || orgSettings.logoUrl) && (
+                    <button
+                      type="button"
+                      onClick={handleQuickResetLogo}
+                      className="text-xs text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 px-2.5 py-1.5 rounded-xl transition-all"
+                    >
+                      Reset to Default
+                    </button>
+                  )}
+                </div>
+
+                <div>
+                  <input
+                    type="url"
+                    placeholder="Or paste direct image URL (https://...)..."
+                    value={currentDoc.brandOverrides?.logoUrl || currentDoc.companyLogoUrl || orgSettings.logoUrl || ''}
+                    onChange={(e) => handleQuickLogoUrlChange(e.target.value)}
+                    className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-1.5 text-white text-xs placeholder:text-slate-500 font-mono"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Client Selection Card with Locked Snapshot Indicator */}
           <div className="bg-[#0E1118] border border-white/10 rounded-2xl p-4 space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2">

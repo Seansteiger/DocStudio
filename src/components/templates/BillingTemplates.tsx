@@ -22,7 +22,8 @@ import {
   BillingLineItem,
   BillingPayment,
   billingService,
-  DEFAULT_ORG_SETTINGS
+  DEFAULT_ORG_SETTINGS,
+  DEFAULT_BRAND_LOGO_SVG
 } from '../../services/storage/billingService';
 
 interface BillingTemplatesProps {
@@ -37,7 +38,8 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
   // Normalize settings and brand colors
   const orgSettings = billingService.getSettings() || DEFAULT_ORG_SETTINGS;
   const brandAccent = data.brandOverrides?.accentColor || orgSettings.accentColor || '#059669';
-  const logoUrl = data.brandOverrides?.logoUrl || data.companyLogoUrl || orgSettings.logoUrl;
+  const logoUrl = data.brandOverrides?.logoUrl || data.companyLogoUrl || orgSettings.logoUrl || DEFAULT_BRAND_LOGO_SVG;
+  const showLogo = data.showLogo !== undefined ? data.showLogo : (orgSettings.showLogo !== undefined ? orgSettings.showLogo : true);
 
   // Resolve docType
   const docType: BillingDocType = (
@@ -60,7 +62,7 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
   const companyVatNumber = data.companyVatNumber || orgSettings.vatNumber;
   const companyRegNumber = orgSettings.regNumber;
 
-  // Normalize Client Snapshot
+  // Normalize Client Details (without synthetic badges)
   const clientName = data.clientSnapshot?.name || data.clientName || data.payerName || 'Client Name';
   const clientContact = data.clientSnapshot?.contactPerson || '';
   const clientEmail = data.clientSnapshot?.email || data.clientEmail || '';
@@ -90,6 +92,7 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
         description: data.paymentFor,
         quantity: 1,
         unitPrice: Number(data.amountPaid) || 0,
+        discountPct: 0,
         unit: 'Settlement',
         taxRate: 0
       }];
@@ -106,7 +109,7 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
   const totals = billingService.calculateTotals(lineItems, vatRate, discountAmount, payments);
 
   const currency = data.currency || 'ZAR';
-  const currencySymbol = currency === 'ZAR' ? 'R' : currency === 'USD' ? '$' : currency === 'EUR' ? '€' : currency === 'GBP' ? '£' : `${currency} `;
+  const currencySymbol = currency === 'ZAR' ? 'R ' : currency === 'USD' ? '$' : currency === 'EUR' ? '€' : currency === 'GBP' ? '£' : `${currency} `;
 
   // Banking Details
   const bankName = data.bankName || orgSettings.bankName;
@@ -131,7 +134,10 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
     const cfg = badgeConfigs[status] || badgeConfigs.draft;
 
     return (
-      <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[7.5pt] font-mono font-bold tracking-wider uppercase border ${cfg.bg} ${cfg.text} ${cfg.border}`}>
+      <span 
+        className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[7.5pt] font-mono font-bold tracking-wider uppercase border ${cfg.bg} ${cfg.text} ${cfg.border}`}
+        style={{ verticalAlign: 'middle', lineHeight: '1.2' }}
+      >
         {status === 'paid' && <CheckCircle2 size={11} className="text-emerald-700" />}
         {status === 'partial' && <Clock size={11} className="text-amber-700" />}
         {cfg.label}
@@ -141,7 +147,7 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
 
   // Document Type Header Strings
   const docTitleString = docType === 'quote' 
-    ? 'COMMERCIAL QUOTATION & ESTIMATE'
+    ? 'COMMERCIAL QUOTATION' 
     : docType === 'receipt'
     ? 'OFFICIAL PAYMENT RECEIPT'
     : 'TAX INVOICE';
@@ -156,52 +162,86 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
   const isExecutiveCrest = templateId.includes('crest') || templateId.includes('executive') || templateId.includes('proposal');
   const isModernLedger = templateId.includes('ledger') || templateId.includes('agency') || templateId.includes('modern');
 
+  // Explicit table border color
+  const tableBorderColor = isModernLedger ? '#94a3b8' : '#cbd5e1';
+
   return (
     <div 
-      className={`text-slate-900 font-sans text-[9pt] leading-relaxed flex flex-col justify-between min-h-[inherit] w-full print:p-0 ${
+      className={`text-slate-900 text-[9pt] leading-relaxed flex flex-col justify-between min-h-[inherit] w-full print:p-0 ${
         isExecutiveCrest ? 'font-serif' : 'font-sans'
       }`}
       style={{
-        // Define CSS variable for dynamic brand accent
         ['--brand-accent' as any]: brandAccent
       }}
     >
       <div>
         {/* ========================================================= */}
-        {/* TOP ACCENT BAR / BORDER */}
+        {/* 1. TOP ACCENT BAR / BORDER */}
         {/* ========================================================= */}
-        <div 
-          className="w-full h-1.5 rounded-t-sm mb-6 print:mb-4 transition-colors"
-          style={{ backgroundColor: brandAccent }}
-        />
+        {!isMinimalSwiss && (
+          <div 
+            className="w-full h-1.5 rounded-t-sm mb-6 print:mb-4 transition-colors"
+            style={{ 
+              backgroundColor: isModernLedger ? '#0f172a' : isExecutiveCrest ? '#1e3a8a' : brandAccent 
+            }}
+          />
+        )}
 
         {/* ========================================================= */}
-        {/* HEADER BLOCK: BRAND & DOCUMENT NUMBER */}
+        {/* 2. HEADER BLOCK: TOP-LEFT LOGO & DOCUMENT NUMBER */}
         {/* ========================================================= */}
         <div className={`flex justify-between items-start pb-6 mb-6 ${
-          isExecutiveCrest ? 'border-b-4 border-double border-slate-900' : 'border-b border-slate-200'
+          isExecutiveCrest 
+            ? 'border-b-4 border-double border-slate-900' 
+            : isMinimalSwiss 
+            ? 'border-b-2 border-slate-950 pt-2' 
+            : 'border-b border-slate-200'
         }`}>
-          {/* Left: Organization Brand & Contact */}
-          <div className="max-w-[400px]">
-            {logoUrl ? (
-              <img 
-                src={logoUrl} 
-                alt={companyName} 
-                className="max-h-12 max-w-[200px] object-contain mb-3"
-              />
-            ) : null}
+          {/* Left: Organization Brand & Top-Left Logo */}
+          <div className="max-w-[420px]">
+            {/* Top-Left Company Logo (Prominently placed at top-left) */}
+            {showLogo && (
+              <div className="mb-3 flex items-center">
+                {logoUrl ? (
+                  <img 
+                    src={logoUrl} 
+                    alt={companyName} 
+                    className="max-h-14 w-auto max-w-[220px] object-contain"
+                  />
+                ) : (
+                  <div className="flex items-center gap-2.5">
+                    <div 
+                      className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-xs"
+                      style={{ backgroundColor: brandAccent }}
+                    >
+                      <Building size={20} />
+                    </div>
+                    <div className="leading-tight">
+                      <div className="font-extrabold tracking-tight text-slate-950 text-xs font-mono uppercase">
+                        {companyName ? companyName.split(' ')[0] : 'ENTERPRISE'}
+                      </div>
+                      <div className="text-[7pt] text-slate-500 font-mono tracking-wider uppercase">
+                        COMMERCIAL
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             <div className="flex items-center gap-2">
               <span 
                 className="text-[8pt] font-mono font-bold tracking-widest uppercase transition-colors"
-                style={{ color: brandAccent }}
+                style={{ color: isMinimalSwiss ? '#0f172a' : isModernLedger ? '#0f172a' : brandAccent }}
               >
                 {docTitleString}
               </span>
               {renderStatusBadge()}
             </div>
 
-            <h1 className="text-xl font-extrabold text-slate-950 mt-1 tracking-tight text-balance">
+            <h1 className={`text-xl font-extrabold text-slate-950 mt-1 tracking-tight text-balance ${
+              isExecutiveCrest ? 'font-serif' : 'font-sans'
+            }`}>
               {companyName}
             </h1>
 
@@ -224,16 +264,18 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
             <div 
               className="px-4 py-2.5 rounded-lg border text-right shadow-2xs"
               style={{
-                backgroundColor: `${brandAccent}0D`,
-                borderColor: `${brandAccent}40`
+                backgroundColor: isModernLedger ? '#0f172a' : isMinimalSwiss ? '#f8fafc' : `${brandAccent}0D`,
+                borderColor: isModernLedger ? '#0f172a' : isMinimalSwiss ? '#cbd5e1' : `${brandAccent}40`
               }}
             >
-              <span className="text-[7.5pt] font-mono uppercase tracking-wider block font-bold text-slate-500">
+              <span className={`text-[7.5pt] font-mono uppercase tracking-wider block font-bold ${
+                isModernLedger ? 'text-slate-300' : 'text-slate-500'
+              }`}>
                 {docNumberLabel}
               </span>
               <span 
                 className="text-lg font-black font-mono tracking-wide tabular-nums"
-                style={{ color: brandAccent }}
+                style={{ color: isModernLedger ? '#ffffff' : brandAccent }}
               >
                 {docNumber}
               </span>
@@ -265,21 +307,23 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
         </div>
 
         {/* ========================================================= */}
-        {/* CLIENT INFORMATION & FINANCIAL CALLOUT CARD */}
+        {/* 3. CLIENT INFORMATION & FINANCIAL CALLOUT CARD */}
         {/* ========================================================= */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6 p-4 rounded-xl bg-slate-50/80 border border-slate-200/80">
-          {/* Client Details (Immutable Snapshot) */}
+        <div className={`grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6 p-4 rounded-xl border ${
+          isModernLedger ? 'bg-slate-50 border-slate-300' :
+          isExecutiveCrest ? 'bg-amber-50/20 border-amber-200/70' :
+          isMinimalSwiss ? 'bg-slate-50/60 border-slate-300' :
+          'bg-slate-50/80 border-slate-200/80'
+        }`}>
+          {/* Client Details (Clean Commercial Layout — Zero Synthetic Badges) */}
           <div>
-            <div className="flex items-center gap-1.5 mb-1.5">
-              <span className="text-[7.5pt] font-mono uppercase tracking-wider text-slate-500 font-bold">
+            <div className="mb-1.5">
+              <span className="text-[7.5pt] font-mono uppercase tracking-wider text-slate-500 font-bold block">
                 {clientHeading}
-              </span>
-              <span className="text-[7pt] text-slate-400 flex items-center gap-0.5 font-mono" title="Immutable Tax Audit Snapshot">
-                <Lock size={10} className="text-slate-400" /> Snapshot
               </span>
             </div>
 
-            <h3 className="text-sm font-bold text-slate-950 text-balance">
+            <h3 className={`text-sm font-bold text-slate-950 text-balance ${isExecutiveCrest ? 'font-serif' : 'font-sans'}`}>
               {clientName}
             </h3>
 
@@ -321,7 +365,7 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
               </div>
             </div>
 
-            {/* Contextual Sub-Badge */}
+            {/* Contextual Balance or Settlement Notice */}
             <div className="mt-2 text-right">
               {docType === 'invoice' && (
                 <div className="inline-flex items-center gap-1.5 text-[8pt] font-mono">
@@ -354,7 +398,7 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
               {docType === 'receipt' && (
                 <div className="inline-flex items-center gap-1 text-[8pt] text-emerald-800 font-bold bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200">
                   <CheckCircle2 size={13} className="text-emerald-600" />
-                  Official SARS Tax Receipt Verified
+                  Official SARS Tax Receipt • Verified Settlement
                 </div>
               )}
             </div>
@@ -362,45 +406,87 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
         </div>
 
         {/* ========================================================= */}
-        {/* LINE ITEMS TABLE (Multi-page safe with break-inside-avoid) */}
+        {/* 4. LINE ITEMS TABLE (Crisp Borders Separating All Columns) */}
         {/* ========================================================= */}
         <div className="mb-6 overflow-hidden">
-          <table className="w-full border-collapse text-left text-[8.5pt]">
+          <table 
+            className="w-full text-left text-[8.5pt]"
+            style={{ 
+              borderCollapse: 'collapse', 
+              width: '100%',
+              border: `1px solid ${tableBorderColor}`
+            }}
+          >
             <thead>
               <tr 
-                className="border-b-2 text-slate-900 uppercase font-mono tracking-wider text-[7.5pt]"
-                style={{ borderBottomColor: brandAccent }}
+                className={`uppercase font-mono tracking-wider text-[7.5pt] ${
+                  isModernLedger ? 'bg-slate-900 text-white' :
+                  isExecutiveCrest ? 'bg-slate-900 text-amber-100' :
+                  isMinimalSwiss ? 'bg-slate-100 text-slate-900' :
+                  'bg-slate-100 text-slate-900'
+                }`}
+                style={{ 
+                  borderBottom: `2px solid ${isModernLedger ? '#0f172a' : brandAccent}`
+                }}
               >
-                <th className="py-2.5 pl-2 font-bold w-1/2">
+                <th 
+                  className="py-2.5 px-3 font-bold"
+                  style={{ border: `1px solid ${tableBorderColor}`, width: '42%' }}
+                >
                   {docType === 'quote' ? 'Scope / Deliverable Description' : 'Item Description & Service Scope'}
                 </th>
-                <th className="py-2.5 text-center font-bold w-16">Qty / Unit</th>
-                <th className="py-2.5 text-right font-bold w-28">Rate</th>
-                {lineItems.some(i => i.discountPct) && (
-                  <th className="py-2.5 text-center font-bold w-16">Disc %</th>
-                )}
-                <th className="py-2.5 pr-2 text-right font-bold w-28">Total</th>
+                <th 
+                  className="py-2.5 px-2 text-center font-bold"
+                  style={{ border: `1px solid ${tableBorderColor}`, width: '13%' }}
+                >
+                  Units / Qty
+                </th>
+                <th 
+                  className="py-2.5 px-3 text-right font-bold"
+                  style={{ border: `1px solid ${tableBorderColor}`, width: '15%' }}
+                >
+                  Rate / Unit Price
+                </th>
+                <th 
+                  className="py-2.5 px-3 text-right font-bold"
+                  style={{ border: `1px solid ${tableBorderColor}`, width: '14%' }}
+                >
+                  Discount
+                </th>
+                <th 
+                  className="py-2.5 px-3 text-right font-bold"
+                  style={{ border: `1px solid ${tableBorderColor}`, width: '16%' }}
+                >
+                  Total
+                </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
+            <tbody>
               {lineItems.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="py-6 text-center text-slate-400 italic font-mono text-[8pt]">
+                  <td 
+                    colSpan={5} 
+                    className="py-6 text-center text-slate-400 italic font-mono text-[8pt]"
+                    style={{ border: `1px solid ${tableBorderColor}` }}
+                  >
                     No line items added yet.
                   </td>
                 </tr>
               ) : (
                 lineItems.map((item, idx) => {
                   const gross = (Number(item.quantity) || 0) * (Number(item.unitPrice) || 0);
-                  const discount = item.discountPct ? gross * (item.discountPct / 100) : 0;
-                  const net = gross - discount;
+                  const discountVal = item.discountPct ? gross * (item.discountPct / 100) : 0;
+                  const net = Math.max(0, gross - discountVal);
 
                   return (
                     <tr 
                       key={item.id || idx} 
-                      className="break-inside-avoid even:bg-slate-50/40 hover:bg-slate-50 transition-colors"
+                      className="break-inside-avoid even:bg-slate-50/50 hover:bg-slate-50/80 transition-colors"
                     >
-                      <td className="py-3 pl-2 text-slate-900 pr-4">
+                      <td 
+                        className="py-2.5 px-3 text-slate-900"
+                        style={{ border: `1px solid ${tableBorderColor}` }}
+                      >
                         <div className="font-semibold text-slate-900 leading-snug">{item.description}</div>
                         {item.details && (
                           <div className="text-[7.5pt] text-slate-500 mt-0.5 leading-relaxed text-pretty">
@@ -408,18 +494,32 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
                           </div>
                         )}
                       </td>
-                      <td className="py-3 text-center text-slate-600 font-mono tabular-nums whitespace-nowrap">
-                        {item.quantity} {item.unit ? <span className="text-[7pt] text-slate-400">{item.unit}</span> : ''}
+                      <td 
+                        className="py-2.5 px-2 text-center text-slate-700 font-mono tabular-nums whitespace-nowrap"
+                        style={{ border: `1px solid ${tableBorderColor}` }}
+                      >
+                        <span>{item.quantity}</span> {item.unit ? <span className="text-[7pt] text-slate-500">{item.unit}</span> : ''}
                       </td>
-                      <td className="py-3 text-right text-slate-600 font-mono tabular-nums whitespace-nowrap">
+                      <td 
+                        className="py-2.5 px-3 text-right text-slate-700 font-mono tabular-nums whitespace-nowrap"
+                        style={{ border: `1px solid ${tableBorderColor}` }}
+                      >
                         {currencySymbol}{(Number(item.unitPrice) || 0).toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
-                      {lineItems.some(i => i.discountPct) && (
-                        <td className="py-3 text-center text-slate-500 font-mono tabular-nums text-[8pt]">
-                          {item.discountPct ? `${item.discountPct}%` : '—'}
-                        </td>
-                      )}
-                      <td className="py-3 pr-2 text-right text-slate-950 font-bold font-mono tabular-nums whitespace-nowrap">
+                      <td 
+                        className="py-2.5 px-3 text-right font-mono tabular-nums whitespace-nowrap text-[8pt]"
+                        style={{ border: `1px solid ${tableBorderColor}` }}
+                      >
+                        {item.discountPct ? (
+                          <span className="text-emerald-700 font-bold">{item.discountPct}%</span>
+                        ) : (
+                          <span className="text-slate-400">0%</span>
+                        )}
+                      </td>
+                      <td 
+                        className="py-2.5 px-3 text-right text-slate-950 font-bold font-mono tabular-nums whitespace-nowrap"
+                        style={{ border: `1px solid ${tableBorderColor}` }}
+                      >
                         {currencySymbol}{net.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
                     </tr>
@@ -430,10 +530,10 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
           </table>
 
           {/* ========================================================= */}
-          {/* FINANCIAL SUMMARY TOTALS BLOCK (break-inside-avoid) */}
+          {/* 5. FINANCIAL SUMMARY TOTALS BLOCK */}
           {/* ========================================================= */}
           <div className="flex justify-end mt-4 break-inside-avoid">
-            <div className="w-72 space-y-1.5 text-[8.5pt]">
+            <div className="w-80 space-y-1.5 text-[8.5pt]">
               <div className="flex justify-between text-slate-600">
                 <span>Subtotal (Net):</span>
                 <span className="font-mono tabular-nums">
@@ -442,7 +542,7 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
               </div>
 
               {discountAmount > 0 && (
-                <div className="flex justify-between text-emerald-700">
+                <div className="flex justify-between text-emerald-700 font-medium">
                   <span>Document Discount:</span>
                   <span className="font-mono tabular-nums">
                     -{currencySymbol}{discountAmount.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -458,13 +558,17 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
               </div>
 
               <div 
-                className="flex justify-between text-sm font-black text-slate-950 pt-2 border-t-2"
-                style={{ borderTopColor: brandAccent }}
+                className={`flex justify-between text-sm font-black pt-2 ${
+                  isModernLedger ? 'bg-slate-950 text-white p-2.5 rounded-lg' :
+                  isExecutiveCrest ? 'text-slate-950 border-t-2 border-slate-900 border-b-2 pb-1' :
+                  'text-slate-950 border-t-2'
+                }`}
+                style={!isModernLedger && !isExecutiveCrest ? { borderTopColor: brandAccent } : {}}
               >
                 <span>Grand Total:</span>
                 <span 
                   className="font-mono tabular-nums"
-                  style={{ color: brandAccent }}
+                  style={!isModernLedger ? { color: brandAccent } : { color: '#ffffff' }}
                 >
                   {currencySymbol}{totals.grandTotal.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
@@ -479,7 +583,7 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
                       {currencySymbol}{totals.amountPaid.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>
-                  <div className="flex justify-between text-xs font-bold text-slate-900 bg-slate-100/80 p-1.5 rounded">
+                  <div className="flex justify-between text-xs font-bold text-slate-900 bg-slate-100/90 p-1.5 rounded border border-slate-200">
                     <span>Outstanding Balance:</span>
                     <span className={`font-mono tabular-nums ${totals.balanceDue <= 0.01 ? 'text-emerald-700' : 'text-amber-800'}`}>
                       {currencySymbol}{totals.balanceDue.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -492,7 +596,7 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
         </div>
 
         {/* ========================================================= */}
-        {/* PAYMENT HISTORY LOG TABLE (When payments exist on Invoice) */}
+        {/* 6. PAYMENT HISTORY LOG TABLE (When payments exist on Invoice) */}
         {/* ========================================================= */}
         {docType === 'invoice' && payments.length > 0 && (
           <div className="mb-6 break-inside-avoid">
@@ -501,24 +605,27 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
               <span>Payment History & Verified Remittances</span>
             </h4>
             <div className="border border-slate-200 rounded-lg overflow-hidden">
-              <table className="w-full text-left text-[7.5pt] border-collapse font-mono">
+              <table 
+                className="w-full text-left text-[7.5pt] font-mono"
+                style={{ borderCollapse: 'collapse', width: '100%' }}
+              >
                 <thead className="bg-slate-100 text-slate-700 uppercase">
                   <tr>
-                    <th className="py-1.5 px-3 font-bold">Receipt No</th>
-                    <th className="py-1.5 px-3 font-bold">Date</th>
-                    <th className="py-1.5 px-3 font-bold">Method</th>
-                    <th className="py-1.5 px-3 font-bold">Reference</th>
-                    <th className="py-1.5 px-3 text-right font-bold">Amount Paid</th>
+                    <th className="py-1.5 px-3 font-bold" style={{ border: '1px solid #cbd5e1' }}>Receipt No</th>
+                    <th className="py-1.5 px-3 font-bold" style={{ border: '1px solid #cbd5e1' }}>Date</th>
+                    <th className="py-1.5 px-3 font-bold" style={{ border: '1px solid #cbd5e1' }}>Method</th>
+                    <th className="py-1.5 px-3 font-bold" style={{ border: '1px solid #cbd5e1' }}>Reference</th>
+                    <th className="py-1.5 px-3 text-right font-bold" style={{ border: '1px solid #cbd5e1' }}>Amount Paid</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200">
+                <tbody>
                   {payments.map((p, pIdx) => (
                     <tr key={p.id || pIdx} className="hover:bg-slate-50">
-                      <td className="py-1.5 px-3 font-bold text-slate-900">{p.receiptNumber}</td>
-                      <td className="py-1.5 px-3 text-slate-600">{p.paymentDate}</td>
-                      <td className="py-1.5 px-3 text-slate-700">{p.method}</td>
-                      <td className="py-1.5 px-3 text-slate-500">{p.reference}</td>
-                      <td className="py-1.5 px-3 text-right text-emerald-800 font-bold tabular-nums">
+                      <td className="py-1.5 px-3 font-bold text-slate-900" style={{ border: '1px solid #cbd5e1' }}>{p.receiptNumber}</td>
+                      <td className="py-1.5 px-3 text-slate-600" style={{ border: '1px solid #cbd5e1' }}>{p.paymentDate}</td>
+                      <td className="py-1.5 px-3 text-slate-700" style={{ border: '1px solid #cbd5e1' }}>{p.method}</td>
+                      <td className="py-1.5 px-3 text-slate-500" style={{ border: '1px solid #cbd5e1' }}>{p.reference}</td>
+                      <td className="py-1.5 px-3 text-right text-emerald-800 font-bold tabular-nums" style={{ border: '1px solid #cbd5e1' }}>
                         {currencySymbol}{(Number(p.amount) || 0).toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
                     </tr>
@@ -530,7 +637,7 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
         )}
 
         {/* ========================================================= */}
-        {/* OFFICIAL SETTLEMENT BANNER FOR PAYMENT RECEIPTS */}
+        {/* 7. OFFICIAL SETTLEMENT BANNER FOR PAYMENT RECEIPTS */}
         {/* ========================================================= */}
         {docType === 'receipt' && (
           <div className="mb-6 p-4 rounded-xl bg-emerald-50/70 border border-emerald-200 flex items-center justify-between break-inside-avoid">
@@ -555,9 +662,11 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
       </div>
 
       {/* ========================================================= */}
-      {/* FOOTER: BANKING DETAILS / QUOTE ACCEPTANCE / SIGN-OFF */}
+      {/* 8. FOOTER: BANKING DETAILS / QUOTE ACCEPTANCE / SIGN-OFF */}
       {/* ========================================================= */}
-      <div className="pt-6 border-t-2 border-slate-900/40 break-inside-avoid">
+      <div className={`pt-6 break-inside-avoid ${
+        isExecutiveCrest ? 'border-t-4 border-double border-slate-900' : 'border-t-2 border-slate-900/40'
+      }`}>
         {docType === 'quote' ? (
           /* Quote Acceptance Block */
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-end">
@@ -591,14 +700,14 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
           /* Receipt Sign-off Block */
           <div className="flex justify-between items-end text-[8pt]">
             <div>
-              <span className="text-slate-500 block mb-3">Received on behalf of {companyName}:</span>
+              <span className="text-slate-500 block mb-2">Received on behalf of {companyName}:</span>
               <div className="font-bold text-slate-950 text-xs">{data.receivedByName || accountHolder}</div>
-              <div className="text-slate-400 font-mono text-[7.5pt]">Authorized Finance Directorate & Cashier</div>
+              <div className="text-slate-500 font-mono text-[7.5pt]">Authorized Finance Directorate & Cashier</div>
             </div>
 
-            <div className="text-right text-[7.5pt] text-slate-400 font-mono space-y-0.5">
-              <div>DocStudio Verified Electronic Slip</div>
-              <div>Tamper-evident hash logged securely</div>
+            <div className="text-right text-[7.5pt] text-slate-500 font-mono space-y-0.5">
+              <div className="font-semibold text-slate-700">Official Payment Remittance Slip</div>
+              <div>Electronic settlement confirmed • SARS compliant</div>
             </div>
           </div>
         ) : (
@@ -640,10 +749,10 @@ export const BillingTemplates: React.FC<BillingTemplatesProps> = ({
             <div className="text-right text-[8pt] text-slate-600 space-y-1">
               <p className="font-semibold text-slate-900">Payment Terms & Instructions:</p>
               <p className="leading-relaxed text-pretty text-[7.5pt]">
-                {paymentTerms || "Payment due within 14 calendar days of tax invoice date."}
+                {paymentTerms || "Payment due strictly within 14 calendar days of tax invoice date."}
               </p>
               <div className="pt-2 text-[7pt] text-slate-400 font-mono">
-                SARS VAT Compliant Document • Generated securely by DocStudio
+                Official Tax Invoice • Value-Added Tax Act, 1991 • SARS VAT Compliant
               </div>
             </div>
           </div>
